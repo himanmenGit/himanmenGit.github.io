@@ -502,8 +502,9 @@ INSTALLED_APPS = [
 ```
 
 *RDS Security Group 인바운드 규칙 추가*
+```
 Postgres|TCP|5432|내 IP|...|설명
-
+```
 
 **14. S3 관련 설정추가**
 ```
@@ -549,7 +550,9 @@ client.create_bucket(Bucket='fc-7th-ec2-deploy-himanmen', CreateBucketConfigurat
 
 > `create_bucket(Bucket='name')`에서 `name`은 전 세계에서 유일한 이름이어야 한다. 다른 AWS 사용자의 `bucket`이름을 사용 할 수 없다. 그리고 언더스코어가 아닌 하이픈을 사용 해야 한다.
 를 하게되면 `AWS S3`에 `Bucket`이 생성된 것을 볼수 있다.
+
 ==base.json에 s3관련 설정 추가==
+
 ```....
 
   "AWS_STORAGE_BUCKET_NAME": "<AWS S3 BUCKET NAME>",
@@ -643,7 +646,7 @@ Select a load balancer type
 docker build -t <docker images name>:<tag> -f Dockerfile.base .
 ```
 도커 허브에 저장소를 만들자
-<계정명>:<repository name>이 저장소 주소가 된다.
+`<계정명>:<repository name>`이 저장소 주소가 된다.
 그리고 만들어 놓은 도커 이미지에 저장소로 태그를 붙임.
 ```
 docker tag <docker images name>:<tag>
@@ -653,9 +656,7 @@ docker tag <docker images name>:<tag>
 docker push <계정명>/<repository name>:<tag>
 ```
 위에서 만든 태그 네임과 똑같이 사용
-
 만약 도커허브 접근 권한이 없으면 로그인을 한다
-
 도커허브 저장소의 tag탭을 보면 base로 올라간것을 볼 수 있다.
 ```
 docker login
