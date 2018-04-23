@@ -26,4 +26,8 @@
       {% endif %}
     {% endfor %}
   </span>
+  {% if page.title != "Home" %}
+  <br><br>
+  <span style="font-style: italic;color: #cc0000">해당 포스트는 수업에 배운 내용을 정리한 것으로 정보가 잘못되거나 틀릴 수 있습니다.</span>
+  {% endif %}
 </div>
