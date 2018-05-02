@@ -70,6 +70,7 @@ git remote ...
 * json 형태로 데이터를 가져다가 쓸 것.
 * json 에서는 따옴표 한개`'` 짜리는 지원 하지 않음. `"` 쓸것.
 * 마지막에 쉼표가 붙으면 안된다.
+
 ```
 # .secrets/base.json
 {
@@ -100,12 +101,16 @@ secrets_base = json.loads(open(SECRETS_BASE, 'rt').read())
 # secrets_base에서 key 값 가져옴
 SECRET_KEY = secrets_base['SECRET_KEY']
 ```
-*** 중요 ***
-*** `gitignore`에 `.secrets/` 추가해서 깃헙에 안올라가게 함
-* `READEME.md`를 작성하여 해당 프로젝트의 정보를 Github에 올림.
+
+***중요***
+
+`gitignore`에 `.secrets/` 추가해서 깃헙에 안올라가게 함
 
 ### EC2 인바운드 규칙 편집
-* EC2 - 보안그룹 - EC2 Secutiry Group - 인바운드 규칙 편집 - 80번 포트 추 - HTTP|TCP|80|위치무관|Nginx 후 저장!
+* EC2 - 보안그룹 - EC2 Secutiry Group - 인바운드 규칙 편집 - 80번 포트 추가
+```
+HTTP|TCP|80|위치무관|Nginx 후 저장!
+```
 
 ### AWS에서는 ipv4, ipv6 둘다 받는다.
 * 점으로 구분된 기준은 ipv4 `0.0.0.0/0`
@@ -139,19 +144,25 @@ cd /etc/nginx/sites-available
 
 ## nginx default
 * nginx는 시작시 모든 nginx sites-enabled 파일에 대해 검사를 한다.
+
+```
+# listten 80, 80번 포트에 대해서 응답을 받음, default_server는 도메인에 일치하지 않는(특정 가상서버를 가리키지 않을경우) 기본적으로 80번 포트가 응답 받는다.
 listen 80 default_server;
-> listten 80, 80번 포트에 대해서 응답을 받음, default_server는 도메인에 일치하지 않는(특정 가상서버를 가리키지 않을경우) 기본적으로 80번 포트가 응답 받는다.
+
+# ipv6용
 listen [::]:80 default_server;
-> ipv6용
+
+# root에 /var/www/html 에서 index들을 찾음.
+# nginx를 설치하면 /var/www/html에 자동으로 파일이 추가 됨.
 root /var/www/html;
 index index.html index.html ...
-> root에 /var/www/html 에서 index들을 찾음.
-> nginx를 설치하면 /var/www/html에 자동으로 파일이 추가 됨.
+
+# location / 은 django의 root-url 을 말하고
+# $url은 / 다음에 오는 문자열을 말하고 문자열과 매칭되는 파일이 있는지 검사 없으면 404에러 발생.
 location / {
 	try_files $uri $uri/
 }
-> location / 은 django의 root-url 을 말하고
-> $url은 / 다음에 오는 문자열을 말하고 문자열과 매칭되는 파일이 있는지 검사 없으면 404에러 발생.
+```
 
 `vi /ect/nginx/sites-available/app`으로 설정파일 nginx의 설정파일을 만듬.
 ```
@@ -186,6 +197,7 @@ server {
 * Nginx는 여러개의 가상 서버를 만들수 있다. 서비스를 한 컴퓨터에 10개를 만들고 그 10개중 한개의서버만 중단해야 한다.
 * sites_availavle에는 동작할수 있는 모든 서버의 정보를 가짐
 * sites_enabled는 실제 동작하고 싶은 서버만 링크를 검.
+
 ```
 /etc/nginx/sites-available
 		default,
@@ -213,6 +225,7 @@ nginx라는 프로세서를 실행하는 유저는 www-data라는 유저고 기�
 www-data가 app.sock에 접근할 권한이 없기 때문에. 에러가 남.
 nginx설정을 열어 유저를 바꾸자
 `sudo vi /etc/nginx/nginx.conf`
+
 ```
 user www-data;
 # ->
@@ -236,9 +249,11 @@ ln -s는 바로가기 수준의 복사를 하는 것.
 ```
 vi /srv/runserver-test/uwsgi.ini
 ```
+
 * 설정 파일을 만들고 내용을 넣는다.
+
 ```
-;runserver-test Django프로젝트에 대한 uwsgi설정파일
+runserver-test Django프로젝트에 대한 uwsgi설정파일
 [uwsgi]
 chdir = /srv/runserver-test/mysite
 module = mysite.wsgi
@@ -252,6 +267,7 @@ vacuum = true
 ;log-reopen = true
 ```
 * .ini 파일을 기준으로 실행
+
 ```
 /home/ubuntu/.pyenv/versions/runserver-test/bin/uwsgi -i /srv/runserver-test/uwsgi.ini 
 ```
@@ -297,16 +313,19 @@ alias deploy-ec2="con-ec2 rm -rf /srv/ec2-deploy; copy-ec2"
 
 # .service를 만들어 백그라운드에 돌게 하자
 * Service
-	# 직접 프로그램을 실행하는것이 아닌, (시스템 트레이에 들어 있듯이) 백그라운드에서 실행되고 있는 프로그램 
-	# service 는 윈도우의 시작 프로그램과 같다.
-	# service = daemon
-	# 프로세스를 demoniation -> 백그라운드에 서비스화 시킨다.
-	Nginx (default)
-	uWSGI
-	    1. /etc/systemd/system/uwsgi.service파일에 서비스 내용을 작성
-	    2. sudo systemctl enable uwsgi로 uwsgi.service를 서비스에 등록
-	    3. sudo systemctl daemon-reload로 systemctl에 등록된 서비스들의 내용이 바뀌었을 경우 적용
-	    4. sudo systemctl restart uwsgi로 uwsgi서비스를 재시작
+
+```
+# 직접 프로그램을 실행하는것이 아닌, (시스템 트레이에 들어 있듯이) 백그라운드에서 실행되고 있는 프로그램 
+# service 는 윈도우의 시작 프로그램과 같다.
+# service = daemon
+# 프로세스를 demoniation -> 백그라운드에 서비스화 시킨다.
+Nginx (default)
+uWSGI
+    1. /etc/systemd/system/uwsgi.service파일에 서비스 내용을 작성
+    2. sudo systemctl enable uwsgi로 uwsgi.service를 서비스에 등록
+    3. sudo systemctl daemon-reload로 systemctl에 등록된 서비스들의 내용이 바뀌었을 경우 적용
+    4. sudo systemctl restart uwsgi로 uwsgi서비스를 재시작
+```
 * .config 에 uwsgi.service 파일 만듬
 
 ```
@@ -327,6 +346,7 @@ NorifyAccess=all
 WantedBy=multi-user.target
 ```
 * 서버의시작프로그램 느낌의 폴더안에 .service복사
+
 ```
 ➜  /srv sudo cp -f /srv/ec2-deploy/.config/uwsgi.service /etc/systemd/system/uwsgi.service # .service 파일 복사
 ➜  /srv sudo systemctl enable uwsgi # uwsgi 적용
@@ -355,6 +375,7 @@ WantedBy=multi-user.target
 > `/etc/systemd/system/uWSGI.service` -> 이후 `sudo systemctl <멍령어> uwsgi` <- 이부분에 사용 가능
 
 * `/etc/systemd/system/uwsgi.service`에서 실행 명령어
+
 ```
 [Service]
 ExecStart=/home/ubuntu/.pyenv/versions/fc-ec2-deploy2/bin/uwsgi -i /srv/ec2-deploy/.config/uwsgi.ini
@@ -383,23 +404,29 @@ EC2-Deploy 프로젝트
 1. Django runserver (0:8000) 접속 확인
 2. uwsgi에 직접 옵션 붙여서 실행
 3. 옵션들을 정리한 ini파일을 사용해서 uwsgi --ini <ini파일경로>로 실행 후 접속 확인
-4. uwsgi서비스를 등록후 접속 확인
-   파일을 `/etc/systemd/system/`폴더에 복사
-   ```
-   sudo systemctl enable uwsgi
-   sudo systemctl daemon-reload
-   sudo systemctl restart uwsgi
-   ```
-   -> `tmp/app.sock`파일을 리눅스 소켓으로 사용해서 uwsgi를 실행하도록 함
+4. uwsgi서비스를 등록후 접속 확인 파일을 `/etc/systemd/system/`폴더에 복사
+   
+```
+sudo systemctl enable uwsgi
+sudo systemctl daemon-reload
+sudo systemctl restart uwsgi
+```
+-> `tmp/app.sock`파일을 리눅스 소켓으로 사용해서 uwsgi를 실행하도록 함
+
 5. `/tmp/app.sock`파일과 통신하는 Nginx 가상서버 설정을 생성 및 링크
+
    5.1. 파일 복사
      `sudo cp -f /srv/ec2-deploy/.config/nginx-app.conf /etc/nginx/sites-available/nginx-app.conf`
+     
    5.2 sites-enabled 폴더의 모든 링크 삭제
-     `sudo rm -rf /etc/nginx/sites-enabled/*.*`
+    `sudo rm -rf /etc/nginx/sites-enabled/*.*`
+     
    5.3 복사한 파일의 링크를 sited-enable에 생성
-     `sudo ln -sf /etc/nginx/sites-available/nginx-app.conf /etc/nginx/sites-enalbed/nginx-app.conf`
+    `sudo ln -sf /etc/nginx/sites-available/nginx-app.conf /etc/nginx/sites-enalbed/nginx-app.conf`
+     
    5.4. 재시작
-     ```
-     sudo systemctl daemon-reload
-     sudo systemctl restart nginx
-     ```
+   
+```
+sudo systemctl daemon-reload
+sudo systemctl restart nginx
+```
