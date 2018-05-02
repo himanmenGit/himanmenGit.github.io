@@ -53,6 +53,9 @@ Airbnb를 copy한 애플리케이션으로 회원가입과 숙소 등록 그리�
 ### API 문서 링크
 https://legacy.gitbook.com/book/himanmengit/airbnb/details
 
+### Github
+https://github.com/himanmenGit/Finn-wps
+
 ## 느낀 점 (힘들었던 것, 배운 것)
 
 역시나 협업. 협업을 하기위한 Git hub을 사용하는 데 있어서 많은 실수가 있었고 그로 인해
