@@ -38,7 +38,7 @@ tags:
 > 4. 이처럼 올바른 답을 내놓지 못했지만 정답에 상당히 가까운 답 이기도 함.
 
 꽤 괜찮은 정도로만 문제를 풀어도 되는 상황이면 탐욕 알고리즘이 좋다.
-보통 정답에 근사한 답을 내 주기 땜ㄴ이다.
+보통 정답에 근사한 답을 내 주기 때문이다.
 
 3. 집합 커버링 문제
 미국 50개의 주에 있는 모든 사람에게 라디오 쇼를 들려주고 싶다.
@@ -53,6 +53,7 @@ KTHREE|오레곤 주, 네바다 주, 캘리포니아 주
 KFOUR|네바다 주, 유타 주
 KFIVE|캘리포니아 주, 아리조나 주
 |기타등등
+
 각 방송국마다 겹치거나 커버할 수 있는 지역이 다름.
 
 > 1. 가능한 모든 방송국의 부분 집합을 나열. 이것을 멱집합 이라고 함. 가능 한 부분 집합의 수는 2<sup>n</sup>
@@ -75,13 +76,13 @@ KFIVE|캘리포니아 주, 아리조나 주
 
 코드 
 방송하고자 하는 주의 목록을 만듬
-```
+```python
 # 배열 넣으면 집합이 된다.
 # set을 사용하여 중복된 원소를 가지지 않는다.
 states_needed = set(['mt', 'wa', 'or', 'id', 'nv', 'ut', 'ca', 'az'])
 ```
 그리고 선택된 방송국의 목록도 필요. 이 목록을 저장하는데는 해시 테이블을 사용.
-```
+```python
 # 방송국 목록
 stations = dict()
 stations["kone"] = set(['id', 'nv', 'ut'])
@@ -91,13 +92,13 @@ stations["kfour"] = set(['nv', 'ut'])
 stations["kfive"] = set(['ca', 'az'])
 ```
 방문할 방송국의 목록을 저장할 집합이 필요
-```
+```python
 # 방문한 방송국의 목록을 저장할 집합
 final_stations = set()
 ```
 모든 방송국을 하나씩 보면서 아직 방송이 되지 않는 주 중에서 가장 많은 주를 커버하고 있는 방송국을 고름
 이 방송국을 `best_station` 이라고 함
-```
+```python
 # 아직 방송이 되지 않는 주 중에서 가장 많은 주를 커버하고 있는 방송국
 best_station = None
 # 아직 방송이  되지 않은 주 중에서 해당 방송국이 커버하는 주의 집합
@@ -116,7 +117,7 @@ for station, states_for_station in stations.items():
 * 교집합은 두 집합에 모두 초함되어 있는 원소들의 집합을 말함.
 * 차집합은 어떤 집합에서 다른 집합에 포함되어 있는 원소를 뺀 나머지 원소의 집합을 말함.
 
-```
+```python
 fruits = set(['avocado', 'tomato', 'banana'])
 vegetables = set(['beets', 'carrots', 'tomato'])
 fruite | vegetables # 이것은 합집합
@@ -133,26 +134,26 @@ vegetables - fruits # 이것도 차집합
 
 `states_needed`와 `states_for_station`에 모두 포함된 주의 집합.
 아직 방송되지 않는 주 중에서 현재 고려하고 있는 방송국이 커버하는 주의 집합.
-```
+```python
 covered = states_needed & states_for_station
 ```
 현재의 `bset_station`보다 더 많은 주를 커버 하는지 확인하고 그렇다면 
 해당 방송국이 새로운 `bset_station`이며 방송국이 커버 하는 주의 집합을 갱신한다.
-```
+```python
 if len(covered) > len(states_covered):
     best_station = station
     states_covered = covered
 ```
 그리고 해당 방송국에서 커버하는 주는 이제 더이상 고려할 필요가 없으므로 집합에서 제외
-```
+```python
 states_needed -= states_covered
 ```
 최선의 선택을 받은 `bset_station`을 순회할 방송국 목록에 추가한다.
-```
-    final_stations.add(best_station)
+```python
+final_stations.add(best_station)
 ```
 전체 코드
-```
+```python
 # 배열 넣으면 집합이 된다.
 # set을 사용하여 중복된 원소를 가지지 않는다.
 states_needed = set(['mt', 'wa', 'or', 'id', 'nv', 'ut', 'ca', 'az'])

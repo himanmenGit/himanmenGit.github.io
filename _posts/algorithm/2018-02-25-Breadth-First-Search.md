@@ -57,13 +57,13 @@ BFS는 다음과 같은 종류의 질문에 대답하는데 도움이 됨.
 
 ### 4.그래프의 구현
 * 해시테이블을 사용하여 구현 (딕셔너리)
-```
+```python
 graph = {}
 graph['you'] = ['alice', 'bob', 'claire']
 ```
 
 * 그래프는 여러 개의 정점과 간선이 모여 있는 것.
-```
+```python
 graph = {}
 graph['you'] = ['alice', 'bob', 'claire']
 graph['bob'] = ['anuj', 'peggy']
@@ -89,7 +89,8 @@ graph['jonny'] = []
 6 만약 큐가 비어 있으면 네트워크에는 망고 판매상이 없다.
 
 * 파이썬에서는 양방향 큐인 `deque`를 사용할 수 있다.
-```
+
+```python
 # 1. 큐를 준비 하고 나의 이웃을 추가
 search_queue = deque()
 search_queue += graph["you"]
@@ -120,7 +121,7 @@ return False
 그래서 한번 탐색후 다시 탐색되지 않도록 표시
 잘못하면 무한 루프에 빠질 수도 있다.
 **이미 탐색한 목록을 가지고 있어야 한다.**
-```
+```python
 from collections import deque
 
 graph = dict()
