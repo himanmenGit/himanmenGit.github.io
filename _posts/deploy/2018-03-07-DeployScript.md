@@ -64,29 +64,36 @@ location /media/ {
 배포 하는 순간(`deploy-ec2`) 복사가 끝나고 자동으로 커맨드가 실행되게 만듬.
 > `deploy.sh` 파일의 아이콘이 제대로 나오지 않을경우 `BashSupport` 플로그인을 설치 한다.
 > 권한 오류가 날 경우 `deploy.sh` 파일의 권한을 모두사용 가능한 권한으로 바꿔야 한다.`sudo chmod 755 deploy.sh` 를 하자.
+
 ```
 # .config/deploy.sh
 
 #!/usr/bin/env bash
-#export DJANGO_SETTINGS_MODULE=config.settings.production
+# export DJANGO_SETTINGS_MODULE=config.settings.production
+
 # Nginx에 존재하던 모든 enabled서버 설정 링크 삭제
 sudo rm -rf /etc/nginx/sites-enabled/*
+
 # 프로젝트의 Nginx설정 (nginx-app.conf)를 복사
 sudo cp -f /srv/ec2-deploy/.config/nginx-app.conf \
            /etc/nginx/sites-available/nginx-app.conf
+           
 # 복사한 Nginx설정을 enabled에 링크
 sudo ln -sf /etc/nginx/sites-available/nginx-app.conf \
             /etc/nginx/sites-enabled/nginx-app.conf
+            
 # uWSGI서비스 파일을 /etc/systemd/system폴더에 복사
 sudo cp -f /srv/ec2-deploy/.config/uwsgi.service \
            /etc/systemd/system/uwsgi.service
 
-## collectstatic을 위한 과정
-#cd /srv/ec2-deploy/app
-## ubuntu유저로 collectstatic명령어를 실행 (deploy스크립트가 root권한으로 실행되므로)
-#/bin/bash -c \
-#'/home/ubuntu/.pyenv/versions/fc-ec2-deploy/bin/python \
-#/srv/ec2-deploy/app/manage.py collectstatic --noinput' ubuntu
+### collectstatic을 위한 과정
+
+# cd /srv/ec2-deploy/app
+
+### ubuntu유저로 collectstatic명령어를 실행 (deploy스크립트가 root권한으로 실행되므로)
+
+# /bin/bash -c \
+# /home/ubuntu/.pyenv/versions/fc-ec2-deploy/bin/python /srv/ec2-deploy/app/manage.py collectstatic --noinput ubuntu
 
 # uwsgi, nginx를 재시작
 sudo systemctl enable uwsgi

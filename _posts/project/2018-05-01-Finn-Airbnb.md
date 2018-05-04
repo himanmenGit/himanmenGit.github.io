@@ -41,21 +41,6 @@ Airbnb를 copy한 애플리케이션으로 회원가입과 숙소 등록 그리�
 * 여러장의 숙소 이미지 등록 가능.
 등등..
 
-### 애플리케이션 영상 링크
-**IOS**
-
-[![to:IOS](http://img.youtube.com/vi/DakKUIPhBV8/0.jpg)](https://youtu.be/DakKUIPhBV8?t=0s)
-
-**WEB**
-
-[![to:Web](http://img.youtube.com/vi/z0QJ7pLDDSE/0.jpg)](https://youtu.be/z0QJ7pLDDSE?t=0s)
-
-### API 문서 링크
-https://legacy.gitbook.com/book/himanmengit/airbnb/details
-
-### Github
-https://github.com/himanmenGit/Finn-wps
-
 ## 느낀 점 (힘들었던 것, 배운 것)
 
 역시나 협업. 협업을 하기위한 Git hub을 사용하는 데 있어서 많은 실수가 있었고 그로 인해
@@ -110,9 +95,56 @@ https://github.com/himanmenGit/Finn-wps
 * 숙소 썸 네일 이미지 S3 저장 로직 변경
 등등..
 
+### 애플리케이션 영상 링크
+**IOS**
+
+[![to:IOS](http://img.youtube.com/vi/DakKUIPhBV8/0.jpg)](https://youtu.be/DakKUIPhBV8?t=0s)
+
+**WEB**
+
+[![to:Web](http://img.youtube.com/vi/z0QJ7pLDDSE/0.jpg)](https://youtu.be/z0QJ7pLDDSE?t=0s)
+
+### API 문서 링크
+
+https://legacy.gitbook.com/book/himanmengit/airbnb/details
+
+### Github
+
+https://github.com/himanmenGit/Finn-wps
+
+## 프로젝트 View 
+
+* \[회원가입 및 페이스북 로그인\]
+
+![readme_001](/assets/project/airbnb/for_readme_001.png)
+
+* \[숙소 등록하기 Step One\]
+
+![readme_002](/assets/project/airbnb/for_readme_002.png)
+
+* \[숙소 등록하기 Step Two\]
+
+![readme_003](/assets/project/airbnb/for_readme_003.png)
+
+* \[숙소 등록하기 Step Three\]
+
+![readme_004](/assets/project/airbnb/for_readme_004.png)
+
+* \[Guest Main View\]
+
+![readme_005](/assets/project/airbnb/for_readme_005.png)
+
+* \[Room Detail View\]
+
+![readme_006](/assets/project/airbnb/for_readme_006.png)
+
+* \[Reservation Flow\]
+
+![readme_007](/assets/project/airbnb/for_readme_007.png)
+
 ## 프로젝트 관리
 
-## 스크럼 보드 
+### 스크럼 보드 
 
 #### Sprint1
 
@@ -131,7 +163,7 @@ https://github.com/himanmenGit/Finn-wps
 ![Sprint4](/assets/project/airbnb/Scrum-Board-4.png)
 
 
-## 트렐로
+### 트렐로
 
 #### Sprint1
 ![Sprint4](/assets/project/airbnb/trello_01.png)

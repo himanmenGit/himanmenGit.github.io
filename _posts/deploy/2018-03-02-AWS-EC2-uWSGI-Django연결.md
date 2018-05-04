@@ -75,12 +75,18 @@ ssh -i(identity file) <공개키 파일경로.pem> user_name@public_dns_name`
 
 # EC2 Ubunut 환경 python&django 설정하기
 1. 패키지 관리자가 옛날 버전이라 apt를 업데이트 
-`sudo apt-get update` 
+```
+sudo apt-get update
+``` 
 2. 기존에 깔려 있던 패키지도 업데이트 
-`sudo apt-get dist-upgrade`
+```
+sudo apt-get dist-upgrade
+```
 3. `Keep the local version currently installed` 선택
-4. pyenv Common Build problems 해결 
-`sudo apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev`
+4. pyenv Common Build problems 해결
+```
+sudo apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev
+```
 5. `pyenv-installer`를 이용해 설치 
 ```
 curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
@@ -91,61 +97,67 @@ export PATH="/home/ubuntu/.pyenv/bin:$PATH"
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 ```
-7. zsh 설치 
-`sudo apt-get install zsh`
-6. ohmy zsh 설치 
-`curl -L http://install.ohmyz.sh | sh`
-7. 기본셸 zsh로 변경 ubuntu 유저에 대해서변경 
+7. zsh 설치
+```
+sudo apt-get install zsh
+```
+8. ohmy zsh 설치 
+```
+curl -L http://install.ohmyz.sh | sh
+```
+9. 기본셸 zsh로 변경 ubuntu 유저에 대해서변경 
 ```
 sudo chsh ubuntu -s- `which zsh`
 ```
-8. 서버를 나갔다가 다시 들어가면 `zsh`로 바뀜 
-9. 이제 zhs 설정을 함 
-`vi ~/.zshrc`
+10. 서버를 나갔다가 다시 들어가면 `zsh`로 바뀜 
+11. 이제 zhs 설정을 함 
+```
+vi ~/.zshrc
+```
 두번째 줄 주석 해제 Shift-g를 통해 마지막 줄로 가서 위에서 복사 해놓은 설정을 붙여 넣기 그런다음 서버 재접속이나 `source ~/.zshrc`로 설정 적용.
 
-10. `/srv`로 가서 프로젝트 폴더를 만듬 그런데 `/srv` 폴더는 root 권한임 그래서 `ubuntu`계정 권한으로 바꿔 줘야함 
-> `sudo chown -R ubuntu:ubuntu srv`
-> root/srv -> cd / srv/ 에 pyenv install 3.6.4 설치
-> /srv /var 디렉터리에 서비스를 많이 넣어 놓는다.
-> /srv 서비스 디렉토리로 주로 인터넷 관련 파일이 위치.l
-> /var 운영도중 파일의 크기가 변하는 요소를 담는 디렉토리. 보통 로그파일을 담음. 
-> Home/srv 가 아님. root/srv/임 cd /로 감.
+12. `/srv`로 가서 프로젝트 폴더를 만듬 그런데 `/srv` 폴더는 root 권한임 그래서 `ubuntu`계정 권한으로 바꿔 줘야함
+    ```
+    # root/srv -> cd / srv/ 에 pyenv install 3.6.4 설치
+    # /srv /var 디렉터리에 서비스를 많이 넣어 놓는다.
+    # /srv - 서비스 디렉토리로 주로 인터넷 관련 파일이 위치.
+    # /var - 운영도중 파일의 크기가 변하는 요소를 담는 디렉토리. 보통 로그파일을 담음. 
+    # Home/srv 가 아님. root/srv/임 cd/ 로 감.
+    
+    sudo chown -R ubuntu:ubuntu srv
+    
+    cd /srv
+    mkdir runserver-test
+    cd runserver-test
+    pyenv install 3.6.4
+    ```
 
-```
-sudo chown -R ubuntu:ubuntu srv
-
-cd /srv
-mkdir runserver-test
-cd runserver-test
-pyenv install 3.6.4
-```
-11. 가상 환경을 만들어줌
+13. 가상 환경을 만들어줌
 ```
 pyenv virtualenv 3.6.4 runserver-test
 pyenv local runserver-test
 ```
 
-12. 이후 장고 설치 및 프로젝트 생성후 `runserver` 확인
+14. 이후 장고 설치 및 프로젝트 생성후 `runserver` 확인
 ```
 pip install django
 django-admin startproject mysite
 cd mysite
 ./manage.py runserver 0:8000 
 ```
-13. 브라우저에 접속 ec2-13-124-253-19.ap-northeast-2.compute.amazonaws.com:8000
+15. 브라우저에 접속 ec2-13-124-253-19.ap-northeast-2.compute.amazonaws.com:8000
 하지만 연결 안됨. 
 
-14. EC2안의 보안그룹안에 두개가 있는데 우리가 만든 EC2 Security Gropu를 선택 -> 인바운드로 가서 -> 편집 -> 규칙 추가 -> 사용자 지정 TCP|프로토콜 TCP|포트범위 8000|소스 위치무관|설명 Django runserver 로 추가, 저장한다. 이후 다시 접속 allowed_host 가 비어 있어서 에러가 남. `Django`의 `DEBUG` 가 `TRUE` 이면  `allowd_host`는 `['localhost', '127.0.0.1', '[::1]']`을 추가함. 에러가 나지 않도록 `mysite/settings.py`에 
+16. EC2안의 보안그룹안에 두개가 있는데 우리가 만든 EC2 Security Group를 선택 -> 인바운드로 가서 -> 편집 -> 규칙 추가 -> 사용자 지정 TCP|프로토콜 TCP|포트범위 8000|소스 위치무관|설명 Django runserver 로 추가, 저장한다. 이후 다시 접속 allowed_host 가 비어 있어서 에러가 남. `Django`의 `DEBUG` 가 `TRUE` 이면  `allowd_host`는 `['localhost', '127.0.0.1', '[::1]']`을 추가함. 에러가 나지 않도록 `mysite/settings.py`에 
 ```
 ALLOWED_HOST [ 
     '.amazonaws.com', 
 ]
 ```
 을 넣어 준다.
-15. 이후 ./manage.py runserver 0:8000 으로 서버 실행 0:8000을 꼭 넣어야함.
+17. 이후 ./manage.py runserver 0:8000 으로 서버 실행 0:8000을 꼭 넣어야함.
 
-16. 하지만 실제 서버에서는 runserver를 쓰지 않는다.
+18. 하지만 실제 서버에서는 runserver를 쓰지 않는다.
 
 # 지금까지 한 시스템의 구성
 

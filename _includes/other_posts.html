@@ -1,0 +1,16 @@
+<section class="related">
+  <h2>Other Posts</h2>
+  <ul class="posts-list">
+    {% assign category = page.tags[0] %}
+    {% for post in site.categories[category] %}
+      <li>
+        <h3>
+          <a href="{{ site.baseurl }}{{ post.url }}">
+            {{ post.title }}
+            <small>{{ post.date | date_to_string }}</small>
+          </a>
+        </h3>
+      </li>
+    {% endfor %}
+  </ul>
+</section>
