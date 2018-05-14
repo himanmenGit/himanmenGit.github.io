@@ -11,7 +11,7 @@ tags:
 
 또한 재귀관계와 아직 정의되지 않은 모델과의 관계를 만들 수 도 있다. 
 재귀관계란 자기 자신과 다 대일 관계를 갖는 객체 관계를 말한다. 예를들어 `Person`이 선생님 일수도 있고 학생일수도 있을 경우를 만들어 보자 `'self'`를 사용하여 만들 수 있다.
-```
+```python
 class Person(models.Model):
     name = models.CharField(max_length=60)
     teacher = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True)
@@ -19,13 +19,13 @@ class Person(models.Model):
     def __str__(self):
         return self.name
 ```
-```
+```python
 lhy = Person.objects.create(name='이한영')
 himanmen = Person.objects.create(name='박수민1', teacher=lhy)
 himanmen2 = Person.objects.create(name='박수민2', teacher=lhy)
 ```
 이런 경우 선생님은 선생님 자신을 가지는 형태를 취한다. 그리고 선생님과 관계된 학생들(Person)을 가져 올때는 역 참조를 사용할 수 있다.
-```
+```python
 lhy.person_set.all()
 ```
 

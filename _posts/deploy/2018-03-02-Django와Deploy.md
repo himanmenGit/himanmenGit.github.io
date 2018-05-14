@@ -133,7 +133,7 @@ EC2 -> Nginx(Nginx virtual server) <->(Unix Socket) uWSGI -> Django
 * `/tmp/`에 `app.sock`이 생긴다.
 * 서버가 끊어지면 `app.sock`이 사라진다.
 
-* EC2 -> Nginx(Nginx Configuration이 필요|virtual server) ->(Unix socket) -> uWSHI -> Django
+* EC2 -> Nginx(Nginx Configuration이 필요/virtual server) ->(Unix socket) -> uWSGI -> Django
 * nginx의 설정파일은 
 ```
 cd /etc/nginx/sites-available
@@ -195,7 +195,7 @@ server {
 * `unix///app.socket` 으로 사용
 * 외부에서 데이터를 받을때는 어쩔수 없이 HTTP로 받지만 내부에서는 Unix Sokect방식을 사용하여 속도를 높인다.
 * Nginx는 여러개의 가상 서버를 만들수 있다. 서비스를 한 컴퓨터에 10개를 만들고 그 10개중 한개의서버만 중단해야 한다.
-* sites_availavle에는 동작할수 있는 모든 서버의 정보를 가짐
+* sites_available 동작할수 있는 모든 서버의 정보를 가짐
 * sites_enabled는 실제 동작하고 싶은 서버만 링크를 검.
 
 ```

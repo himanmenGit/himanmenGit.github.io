@@ -15,6 +15,7 @@ tags:
 
 ### 다 대일 (Many-to-one relationships)
 다 대일 관계를 표현하려면 장고 모델의 `django.db.models.ForeignKey`를 사용 하면 된다.
+
 `ForeignKey`는 위치 인수가 필요하다. 모델이 관련된 클래스 이다.
 만약 자동차와 제조회사가 있는 경우 제조업체가 여러 자동차를 생산하지만 각 자동차에는 하나의 제조 업체가 있는 경우를 만들어 보면
 ```python
@@ -39,7 +40,7 @@ class Car(models.Model):
     def __str__(self):
         return f'{self.manufacturer.name} {self.name}'
 ```
-```
+```python
 samsung = Manufacturer.objects.create(name='아우디')
 sm3 = Car.objects.create(manufacturer=samsung, name='sm3')
 
