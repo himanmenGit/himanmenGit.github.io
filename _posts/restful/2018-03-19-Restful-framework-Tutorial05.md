@@ -15,7 +15,7 @@ tags:
 * 인증 받지 않은 사용자는 '읽기 전용'으로만 사용 가능하다.
 
 ## 우선 유저 모델을 만들고 유저모델을 `SomeModel`에 추가하자.
-```
+```python
 # app
 ./manage.py startapp members
 
@@ -41,14 +41,14 @@ AUTH_USER_MODEL = 'members.User'
 ./manage.py migrate
 ```
 SomeModel에 `owner`등록 
-```
+```python
 from django.conf import settings
 
 owner = models.ForeignKey(settings.AUTH_USE_MODEL, related_name='somemodels', on_delete=models.CasCase
 ```
 
 이제 사용자를 만들었으니 사용자를 보여주는 API도 추가 `members` 앱에 `serializers.py`추가
-```
+```python
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
@@ -69,7 +69,7 @@ class UserSErializer(serializers.ModelSerializer):
 ```
 
 그리고 유저에 대한 `generic View`를 만들어 준다.
-```
+```python
 from django.contrib.auth import get_user_model
 from rest_framework import generics
 
@@ -88,7 +88,7 @@ class UserDetail(generics.RetrieveAPIView):
     serializer_class = UserSerializer
 ```
 뷰에 대한 `ursl`를 연결 시켜 주자 `urls.py`를 만들고 연결
-```
+```python
 from django.urls import path
 
 from .apis import UserList, UserDetail
@@ -103,7 +103,7 @@ urlpatterns = [
 사용자는 직렬화된 표현에 나타나지 않았고, 요청하는 측에서 지정하는 속성 이었을 뿐이다.
 지금 만약 `somemodel`을 API를 통해서 만들려고 하면 `NOT NULL constraint failed` 에러가 날 것이다. `owner_id`가 `NULL`이 아니기 떄문이고, `SomeModelSerializer`에 `fields`에 `owner`에 대한 정보가 없기 때문이다. `is_valid()`에서는 통과 했지만 `save()`호출시 `onwer`에 대한 정보가 없기 때문에 에러가 발생했다.
 이를 해결 하기 위해 `perform__create()`를 써야 한다. 해당 함수는 `is_valid()`가 통과되고 나서 실행되는 함수로 이 함수를 `SomeModelList`에서 오버라이드 하여 추가 작업을 하고 저장하는 루틴으로 만들자.
-```
+```python
 class SomeModelList(..
     queryset = ...
     ...
@@ -113,7 +113,7 @@ class SomeModelList(..
 ```
 `owner`에 대한 정보를 넘어온 요청에 대한 사용자로 처리 하도록 한다. 하지만 만약 인증되어 있지 않은 유저로 해당 API를 실행할 경우 `AnonymousUser`라는 확인되지 않은 유저가 왔다고 에러가 난다.
 일단 `SomeModelSerializer`에 `owner`에 대한 시리얼라이저를 읽기전용속성으로 만들어서 읽을수 있게하자.
-```
+```python
 class SomeModelSerializer(...
     owner = serializers.ReadOnlyField(source='owner.username')
     
@@ -129,7 +129,7 @@ class SomeModelSerializer(...
 그리고 이제 인증 받은 사용자만 `SomeModel`을 생성/업데이트/삭제 해 보자,
 특정 뷰에 대한 제한을 걸 수 있는 권한 클래스 중 하나인 `IsAuthenticatedOrReadOnly`를 넣자. 이것은 인증 받은 요청에 읽기와 쓰기 권한을 부여하고 인증 받지 않은 요청에 대해서는 읽기 권한만 부여 한다
 `SomeModel List`에 다음 내용을 추가 하자
-```
+```python
 from rest_framework import permissions
 
 permission_classes = (
@@ -140,7 +140,7 @@ permission_classes = (
 ## django-rest-framework Authentication
 기본적으로 두가지 인증 방식을 제공한다
 `BasicAUthentication` 과 `SessionAuthentication`이다.
-```
+```python
 # settings.py
 REST_FRAMEWORF = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -172,7 +172,7 @@ Authorization: Basic <base64로 인코딩된 username:password>
 ## 커스텀 권한 만들기
  객체의 소유자에게만 쓰기를 허용하고 다른 사용자는 읽을수 있기만 하는 권한을 만들어 보자
 SomeApp 안에 `permissions.py`파일을 만들고 다음 내용을 입력
-```
+```python
 from rest_framework import permissions
 
 
@@ -189,7 +189,7 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
 
 ## 페이징 기능 추가하기 pagination
 가장 쉬운 방법은 `settings.py`에 해당 코드를 넣는것이다
-```
+```python
 REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
 }
@@ -197,7 +197,7 @@ REST_FRAMEWORK = {
 하지만 이것은 모든 API요청에 대해 적용되는 것으로 추천하지 않는 방법이고, 
 추천되는 방법은 각 뷰마다 다른 페이징 기능을 적용 하는 것이다.
 `pagination.py`를 만들고 
-```
+```python
 # pagination.py
 from rest_framework.pagination import PageNumberPagination
 
@@ -208,7 +208,7 @@ class StandardResultsSetPagination(PageNumberPagination):
     max_page_size = 5
 ```
 한후 뷰에 적용
-```
+```python
 class SomeModelList(....
     ...
     pagination_class = StandardResultsSetPagination

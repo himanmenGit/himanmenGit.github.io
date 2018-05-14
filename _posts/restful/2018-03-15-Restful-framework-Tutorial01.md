@@ -15,7 +15,7 @@ tags:
 * json은 가장 일반적이고 대부분의 언어에서 파싱하여 데이터를 복원하는데 큰 문제가 없기 때문에 많이 사용한다.
 
 ### 설치
-```
+```bash
 pip install djangorestframework
 ```
 `INSTALLED_APPS`에 등록
@@ -25,7 +25,7 @@ pip install djangorestframework
 ```
 
 전송하고 싶은 데이터의 모델을 직렬화 시켜주는 모듈을 만들어야 한다. 직렬화를 하고 싶은 모델이 있는 앱에 `serializers.py`라는 모듈을 만들고 해당 모델을 직렬화 시키켜주는 코드를 작성하자.
-```
+```python
 from rest_framework import serializers
 from .models import SomeModel
 
@@ -40,7 +40,8 @@ class SomeModelSerializer(serializers.ModelSerializer):
 
 그리고 이 시리얼라이저를 사용할 수 있는 부분이 제한되어 있다. 사용하기 위해서는 rest_framework에서 제공하는 `APIView`를 사용해야 하며, 이 뷰는 클래스 기반이다. 그리고 함수기반 뷰는 사용 할 수 없다. 
 사용방법은 데이터를 받는 방식의 함수를 선언해주면 된다.
-```
+
+```python
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from ...serializers import SomeModelSerializer
@@ -57,7 +58,8 @@ class SomeView(APIView):
 `somemodels`의 쿼리셋을 시리얼라이저에 전달하여 모든 쿼리셋에대한 모든 필드를 직렬화 시킨 시리얼라이저를 생성시키고 데이터꺼내서 rest_framework의 Response를 사용하여 반환한다.
 
 이렇게 만들어진 뷰를 urls에 연결 해야 하는데 클래시 기반 뷰는 클래스 기반 자체가 실행할 수 있는 함수가 아니다. 그래서 클래스 기반 뷰의 기본을 상속받은 뷰는 `as_view()`라는 함수를 가지는데, 이 함수를 이용하여 해당 클래스뷰에 대한 동작을 만들수 있는 함수가 반환한다.
-```
+
+```python
 form .veiws import SomeView
 
 urlpatterns = [

@@ -28,7 +28,7 @@ tags:
 
 
 ### installation
-```
+```bash
 $ pip install django-filter
 ```
 

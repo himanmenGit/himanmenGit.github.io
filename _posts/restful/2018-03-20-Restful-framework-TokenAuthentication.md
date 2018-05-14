@@ -26,7 +26,7 @@ tags:
  
  `django_rest_framework`는 기본적으로 `BasicAuthentication`와 `SessionAuthentication`을 사용한다. 추가하거나 제외 할 경우 `settings.py`에 아래에 해당하는 설정을 추가하거나 삭제 하면 된다.
  
-```
+```python
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.BasicAuthentication',
@@ -54,7 +54,7 @@ REST_FRAMEWORK = {
 이 인증 체계는 간단한 토큰 기반 HTTP 인증 체계를 사용한다. 토큰 인증은 네이티브 데스크톱 및 모바일 클라이언트와 같은 클라이언트-서버 설정에 적합하다. 브라우저든 모바일 앱이든 모두 사용 가능 하다.
 
 토큰 인증 스키마를 아요하려면 토큰 인증을 포함하도록 인증 클랙스를 구성 하고 django `INSTALLED_APPS`에 `rest_framework.authtoken`을 추가 해야 한다.
-```
+```python
 INSTALLED_APPS = [
     ...
     'rest_framework.authtoken',
@@ -65,7 +65,7 @@ INSTALLED_APPS = [
 그리고 유저를 위해 토큰을 직접 만들어야 한다. 
 토큰이라는 것은 유저를 나타내는것이 아니라 유저와 연결되어 있는 것이다. 그렇기 때문에 토큰을 가지고 인증을 진행하다가 토큰이 탈취 되어도 그것을 안순간 토큰을 삭제하면된다. 토큰을 삭제 한다고 해서 유저에게 큰 일이 생기지 않는다. 재 로그인 정도?
 토큰을 만들고 싶다면 이렇게..
-```
+```python
 from rest_framework.authtoken.models import Token
 
 token = Token.objects.create(user=...)
@@ -73,7 +73,7 @@ print token.key
 ```
 
 유저 정보를 받아 토큰을 생성하거나 가져와서 토큰을 보여주거나 유저가 없을 경우 인증 에러를 보여주는 코드
-```
+```python
 from django.shortcuts import redirect
 from rest_framework.authtoken.models import Token
 from rest_framework.compat import authenticate
@@ -98,7 +98,7 @@ class AuthTokenView(APIView):
         raise AuthenticationFailed()
 ```
 다른 방법으로는 `AuthtokenSerializer`를 사용하는 방법이 있다. 하지만 이 시리얼라이즈는 토큰을 생성하는 로직이 없기 때문에 해당 로직은 수동으로 넣어 줘야 한다.
-```
+```python
     def post(self, request):
         serializer = AuthTokenSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -112,7 +112,7 @@ class AuthTokenView(APIView):
 시리얼라이즈의 `is_valid()`안에 `raise`를 발생시키는 루틴이 있기 때문에 `raise_exception=True`로 켜주면 유효성 검사 실패시 인증에러에 관한 오류를 반환한다.
 
 만약 사용자정의 `APIException()`을 사용하고 싶으면 `APIException`을 상속 받은 클래스를 만들어사용 하면 된다.
-```
+```python
 from rest_framework.exceptions import APIException
 
 
@@ -124,7 +124,7 @@ class ServiceUnavailable(APIException):
 자주 쓰는 에러는 rest-framework에 미리 선언되어 있는것이 많다.
 
 모델과 모델끼리 다대일, 다대다 관계의 경우에 시리얼라이즈로 관계를 표현하고 싶을 경우 해당 시리얼라이즈를 모델에서 만들어진 필드 이름 혹은 역참조 이름으로 변수를 만들고 해당 시리얼라이즈를 받아서 `fields`에 넣어 주면 된다.
-```
+```python
 from rest_framework import serializers
 
 from members.serializers import UserSerializer

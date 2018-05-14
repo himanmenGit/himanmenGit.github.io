@@ -35,13 +35,13 @@ API단위 자체를 함수로 구분 하는 것
 
 ### TestCase
 `django rest frameowrk testing`에서는 모든 `TestCase`앞에 `API`가 붙는다. 특별한 내용이 아니면 `APITestCase` 만 사용 하면 된다. 해당 모듈을 사용할 경우 `client`에 접근 할 때 따로 만들지 않고 `self.client`로 접근하면 된다.
-```
+```python
 self.client.get(...
 self.client.post(...
 ```
 
 ### Testing
-```
+```python
 import random
 
 from django.urls import reverse, resolve

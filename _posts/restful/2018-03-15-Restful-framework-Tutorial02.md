@@ -12,7 +12,7 @@ tags:
 `Create`와 `update`라는 메소드가 들어 가야 한다. 이 메소드들은 시리얼라이저는 파이썬 객체를 직렬화 할때도 쓰지만 JSON데이터가 들어 왔을때 그 데이터를 이용해 다시 파이썬 객체로 만들때 사용한다.
 외부 데이터를 사용해서 장고에 있는 데이터 베이스 내용을 바꾸거나 추가 하고 싶을때도 시리얼라이즈를 사용한다. `Create`를 이용하여 특정 모델에 받은 데이터를 이용해 생성 해주거나 `update`를 통하여 특정 인스턴스를 와 받은 데이터를 통하여 해당 인스턴스의 데이터를 수정한다.
 
-```
+```python
 class SomeSerializer(serializers.Serializer):
     pk = serializers.IntegerField(read_only=True)
     title = serializes.CharField(required=False, allow_blank=True)
@@ -35,7 +35,7 @@ class SomeSerializer(serializers.Serializer):
 ### ModelSerializer
 `serializer`클래스보다 간단하게 모델의 정보를 직렬화 할수 있다.
 단순히 `Seirializer`의 단축 버전이며 필드를 자동으로 인식한다. 그리고 `create()`메서드와 `update()`메서드가 이미 구현되어 있다.
-```
+```python
 class SomeSerializer(serializers.ModelSerializer):
     class Meta:
         model = SomeModel
@@ -49,9 +49,9 @@ class SomeSerializer(serializers.ModelSerializer):
 #### API뷰 감싸기
 REST 프레임워크는 API 뷰를 작성하는데 사용할 수 있는 두가지 래퍼를 제공.
 * @api_view 데코레이터를 함수 기반 뷰에서 사용할 수 있다.
-* APIView 클래스는 클래스 기반 뷰에서 사용 할 수 있다.
-우리는 클래스 기반뷰 에서 사용하는 것만 알아 보자.
-```
+* APIView 클래스는 클래스 기반 뷰에서 사용 할 수 있다. 우리는 클래스 기반뷰 에서 사용하는 것만 알아 보자.
+
+```python
 # views.py
 from rest_framework import status
 from rest_framework.response import Response
@@ -73,9 +73,9 @@ class SomeList(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+```
 
-```
-```
+```python
 # urls.py
 urlpatterns = [
     path('sonelist/', SomeList.as_view(), name='some-list'),
