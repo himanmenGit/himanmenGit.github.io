@@ -678,7 +678,7 @@ git add -f .secrets && eb deploy --staged --profile=<profile name>; git reset HE
 
 **20. .ebextensions로 migrate collectstatic 자동화**
 ==00.command_files.config==
-```bash
+```yaml
 files:
   "/opt/elasticbeanstalk/hooks/appdeploy/post/01_migrate.sh":
     mode: "000755"
@@ -717,7 +717,7 @@ files:
       fi
 ```
 ==01_django.config==
-```bash
+```yaml
 container_commands:
   01_migrate:
     command:  "touch /tmp/migrate"

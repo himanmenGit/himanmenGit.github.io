@@ -200,14 +200,14 @@ https://github.com/himanmenGit/Finn-wps
 ## Installation (Django runserver)
 
 #### 로컬 환경
-```
+```bash
 pip install -r .requirements/local.txt
 python manage.py runserver
 ```
 
 #### AWS 환경
 
-```
+```bash
 export DJANGO_SETTINGS_MODULE=config.settings.dev
 pip install -r .requirements./dev.txt
 python manage.py runserver
@@ -215,7 +215,7 @@ python manage.py runserver
 
 #### 배포 환경
 
-```
+```bash
 export DJANGO_SETTINGS_MODULE=config.settings.production
 pip install -r .requirements./dev.txt
 python manage.py runserver
@@ -226,20 +226,20 @@ python manage.py runserver
 #### 로컬 환경
 
 `localhost:8000` 에서 확인
-```
+```bash
 docker build -t airbnb:local -f Dockerfile.local
 docker run --rm -it 8000:80 airbnb:local
 ```
 
 #### AWS 환경 (개발 모드)
 
-```
+```bash
 docker build -t airbnb:dev -f Dockerfile.dev
 docker run --rm -it 8000:80 airbnb:dev
 ```
 #### AWS 환경 (배포 모드)
 
-```
+```bash
 docker build -t airbnb:production -f Dockerfile.production
 docker run --rm -it 8000:80 airbnb:production
 ```    
@@ -247,14 +247,14 @@ docker run --rm -it 8000:80 airbnb:production
 ## DockerHub 관련
 
 apt, pip 관련 내용을 미리 빌드해서 DockerHub 저장소에 미리 업로드 하여 사용
-```
+```bash
 # DockerFile 위치에 가서
 docker build -t airbnb:base -f Dockerfile.base . 
 docker tag airbnb:base <자신의 사용자명>/<저장소명>:base
 docker push <사용자명>/<저장소명>:base
 ```
 이후 ElasticBeanstalk을 사용한 배포시, 해당 이미지를 사용한다.
-```
+```bash
 FROM <사용자명>/<저장소명>:base
 ...
 ```
@@ -307,13 +307,13 @@ FROM <사용자명>/<저장소명>:base
 ## 배포
 
 `deploy.sh`파일을 사용
-```
+```bash
 ./deploy.sh
 ```
 
 ## 테스트 실행하기
 
-```
+```bash
 ./manage.py test
 ```
 
@@ -328,7 +328,7 @@ FROM <사용자명>/<저장소명>:base
 * `UserDeleteTest` - 회원 삭제 테스트
 * `UserLoginLogoutTest` - 로그인/로그아웃 테스트
 
-```
+```bash
 ./manage.py test members.tests.signup
 ./manage.py test members.tests.list
 ./manage.py test members.tests.detail
@@ -349,7 +349,7 @@ FROM <사용자명>/<저장소명>:base
 * `HousePartialUpdateTest` - 숙소 부분 수정 테스트
 * `HouseDeleteTest` - 숙소 삭제 테스트
 
-```
+```bash
 ./manage.py test house.tests.create
 ./manage.py test house.tests.list
 ./manage.py test house.tests.retrieve
@@ -599,7 +599,7 @@ class HouseImageManager(models.Manager):
 
 [소스코드](https://github.com/himanmenGit/Finn-wps/blob/dev/app/house/serializers/house.py)
 
-```
+```python
 class HouseSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
     ....
 ```
@@ -716,7 +716,7 @@ container_commands:
 
 `deploy`시 `.secrets`폴더를 `git`의 `stage`영역에 추가 한 후 작업 완료 후 다시 삭제
 
-```yaml
+```bash
 git add -f .secrets && eb deploy --staged --profile=airbnb; git reset HEAD .secrets
 ```
 

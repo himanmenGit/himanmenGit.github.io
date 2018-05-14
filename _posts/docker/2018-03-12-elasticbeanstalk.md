@@ -217,7 +217,7 @@ EC2 내의 `/opt/elasticbeanstalk/hooks/appdeploy/<시점>/<스크립트파일>`
 `appdepoly`를 사용하여 배포를 한후에 스크립트를 실행하게 하자.
 그럴려면 배포 스크립트를 만들어야 한다. `files` 키를 사용하여 EC2 인스턴스에서 파일을 생성 할 수 있다. 콘텐츠는 구성파일의 인라인이거나 URL에서 내용을 가져 올 수 있다.
 `.ebextensions`에 `00_command_files.config`를 만들고 커맨드파일을 만들게 하자. 그리고 만들어진 스크립트는 `container_commands`라는 옵션을 통해 배포가 되기 전에 임시 파일을 만들고 배포후에 해당 파일이 있으면 실행하게 하자.
-```bash
+```yaml
 files:
   "/opt/elasticbeanstalk/hooks/appdeploy/post/01_migrate.sh":
     mode: "000755"
@@ -272,7 +272,7 @@ files:
 STATIC_ROOT = os.path.join(ROOT_DIR, '.static')
 STATIC_URL = '/static/'
 ```
-```
+```yaml
 container_commands:
   01_migrate:
     command:  "touch /tmp/migrate"

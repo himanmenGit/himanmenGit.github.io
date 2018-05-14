@@ -13,11 +13,11 @@ tags:
 > 웹에서 전송 된 해당 객체가 어떤 타입인지 알려 주어야 한다. 그것을 하기 위한 것.
 
 *python-magic 설치
-```
+```bash
 pip install python-magic
 ```
 
-```pyhton
+```python
 import magic
 import requests
 from io import BytesIO
