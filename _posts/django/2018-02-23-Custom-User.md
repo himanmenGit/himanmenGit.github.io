@@ -32,7 +32,7 @@ One To One 필드 사용
 > 외부 인증 라이브러리들을 쓸때 기본적으로 장고의 기본 유저 모델을 기반으로 라이브러리들을 만들기 때문에 사용자 지정 모델을 완전히 대체 할 경우 라이브러리 사용에 문제가 생길 수가 있다.
 
 장고에 내장된 유저 모델이 항상 좋은것은 아닌다. 만약 사용자 이름 대신 이메일을 식별 토큰으로 사용 할 수도 있다. 이런 경우 새로운 유저 모델을 정의 한다.(장고가 제공해주는 모델을 상속받아 정의)
-```
+```python
 AUTH_USER_MODEL = `myapp.MyUser`
 ```
 
@@ -43,12 +43,12 @@ AUTH_USER_MODEL = `myapp.MyUser`
 기본 장고 유저 모델인 `User`는 `AbstractUser`를 상속 받는다. 우리는 이 `User`모델을 기본 모델로 사용한다. 그래서 `AbstracUser`을 우리가 상속받아 사용자 지정 유저 모델을 만들면 된다.
 
 새로 정의한 유저 모델을 쓰기 위해서는 `get_user_model()`이라는 함수를 사용해야 한다.
-```
+```python
 User = get_user_model()
 User.objects.filter(pk=1).delete()
 ```
 만약 모델에서 사용자 지정 유저모델을 사용할 경우 (ForeignKey로 연결 한다든지) `settings.AUTH_USER_MODEL`을 사용해야 한다.
-```
+```python
 from django.conf import settings
 from django.db import models
 
@@ -60,7 +60,7 @@ class Article(models.Model):
 ```
 
 사용자 지정 유저 모델 만드는 방법
-```
+```python
 from django.contrib.auth.models import AbstractUser
 
 
@@ -68,7 +68,7 @@ class User(AbstractUser):
     name = models.
 ```
 주의 할것은 `admin`에 유저를 등록 할 경우 `User`만 사용해서 할 경우에 관리자 페이지에서 유저를 하나 생성하면 비밀번호에 대한 해시키가 제공되지 않아 로그인이 안되는 일이 생긴다. 그래서 해당 관리자 계정 페이지에 `UserAdmin`에 대한 속성까지 제공하여 등록 해야 한다.
-```
+```python
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
@@ -79,7 +79,7 @@ admin.site.register(User, UserAdmin)
 ```
 
 만약 사용자 지정유저모델에 닉네임을 추가 하고 관리자 페이지에서 해당 닉네임을 입력하고 싶은 경우 그리고 관리자 페이지의 유저 목록에서 닉네임을 보고 싶은 경우 어떻게 해야 할까.
-```
+```python
 # members.admin.py
 from django.contrib import admin
 from django.contrib.auth import get_user_model

@@ -17,7 +17,7 @@ tags:
 
 즉 친구추가를 할 경우 서로 친구가 되는것이 아니라 친구를 추가 한 쪽에서만 친구의 관계가 되는 것.
 
-```
+```python
 from django.db import models
 
 __all__ = (
@@ -38,7 +38,7 @@ class InstargramUser(models.Model):
     def __str__(self):
         return self.name
 ```
-```
+```python
 u1, u2, u3 = [InstargramUser.objects.create(name=name) for name in ['장동건', '손지창', '기무라']]
 u1.following.add(u2)
 u1.following.add(u3)

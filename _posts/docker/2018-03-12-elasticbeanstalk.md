@@ -46,12 +46,12 @@ Deploy (Application)
 ***`EB`는 여러가지 `AWS`서비스를 모아서 서비스 한다. 그중에 `EC2`도 포함 되어 있기 때문에 매우 위험한 권한이다. 그렇기 때문에 이 코드는 절대 외부로 유출 되어서는 안된다.***
 
 설치 해보자
-```
+```bash
 pip install awsebcli
 ```
 그리고 `EB`를 초기화 해주어야 한다. 
 프로젝트 폴더로 가서
-```
+```bash
 eb init --profile <profile_name>
 ```
 이후 해당 목록을 보고 진행을 하면된다.
@@ -79,7 +79,7 @@ Browser -> EB -> EB-Nginx -> (proxy) -> Docker Container -> DockerApp-Nginx -> D
 ```
 결국 브라우저에온 요청을 도커 컨테이너로 전달(라우팅) 해주는 것을 `EXPOSE` 의 첫번째 포트를 통해서 한다는 것이다. 
 
-```
+```bash
 # Dockerfile
 ...
 CMD	pkill nginx; supervisord -n
@@ -92,7 +92,7 @@ EXPOSE	80
 그리고 배포를 할때 10분이상의 시간이 걸리면 배포를 실패 했다고 판단한다. 그래서 배포할때의 시간을 최대한 줄여야 하는데, 헤당 `Dockerfile` 을 만들때 퍼블릭 리포지토리, 즉 `Docker Hub`를 이용해서 할 수 있다. 만들어 놓은 이미지의 용량이 크므로 베이스가 되는 부분은 도커허브에 올려 놓고 변경사항에 대해서만 배포가 되게 하면 빠르게 할 수 있다.
 
 일단 배포를 한번 해보자
-```
+```bash
 eb create --profile eb
 ```
 하게 되면 `Environment Name`을 적으라고 나온다. 적당하게 넣어 주자. (ex. Production)
@@ -100,7 +100,7 @@ eb create --profile eb
 그리고 엔터를 치면 첫 배포가 진행이 된다.
 
 그렇게 해놓고 배포 시간을 줄이기 위해 베이스가 되는 부분을 `Dockerfile.base`로 만들어 보자
-```
+```bash
 FROM        python:3.6.4-slim
 MAINTAINER  <Your Email>
 
@@ -119,7 +119,7 @@ WORKDIR     /srv
 RUN         pip install -r /srv/.requirements/production.txt
 ```
 대충 이정도로 시간이 소비 될거 같은 기본 이미지를 만든다. 그리고 이 이미지를 도커빌드 하여 이미지로 만들어보자
-```
+```bash
 docker build -t eb-docker:base -f Dockerfile.base .
 ```
 이미 만들어진 레이어들이기 때문에 금방 만들어 진다. 그러면 이 이미지를 도커허브에 올려 보자.
@@ -127,11 +127,11 @@ docker build -t eb-docker:base -f Dockerfile.base .
 그리고 만들어진 레포지토리의 이름 [계정명/레포지토리 이름] 으로 저장소의 주소를 사용할 수 있다.
 이 것으로 `push`와 `pull`을 사용한다. 그럼 이미지를 한번 `push`해보자
 일단 도커 로그인을 하자
-```
+```bash
 docker login
 ```
 도커허브 계정정보를 넣자. 그리고 태그를 붙여놓고 `push`를 하자. 
-```
+```bash
 docker tag eb-docker:base <도커허브계정명/eb-docer:base>
 docker push <도커허브계정명/eb-docker:base>
 ```
@@ -140,14 +140,14 @@ docker push <도커허브계정명/eb-docker:base>
 그러면 저장소에 base라는 이름으로 압축된 용량으로 올라가 있는것을 확인할 수 있다.
 
 그리고 `Dockerfile`을 수정하자. `Dockerfile.base`에 들어 간 내용을 지우고 저장소의 도커파일을 불러오도록 하자
-```
+```bash
 FROM	<도커허브계정명/eb-docker:base>
 
 ```
 그리고 `EB`가 기본적으로 `Git`에 의해서 동작하게 되어 있다. 커밋을 하지 않은 내용은 `EB`에 포함되지 않는다. 그래서 수정된 부분을 반영 시키기 위해서를 커밋을 해야 한다.
 
 커밋을 하고 배포를 해보자. 재배포는 첫 배포와는 다른 명령어를 사용한다.
-```
+```bash
 eb deploy --profile eb
 ```
 
@@ -161,21 +161,21 @@ eb deploy --profile eb
 `EB`에서 만들어진 `EC2`는 `Amazon Lunux`를 사용한다 이것은 `CentOs` 기반이다.
 
 도커로 접속 해보자
-```
+```bash
 sudo Docker ps
 # CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES
 # 68be8c55be0a        c93666c7b5ad        "/bin/sh -c 'pkill..."   14 hours ago        Up 14 hours         80/tcp              vibrant_wilson
 ```
 `CONTAINER ID` 를 통해 도커 내부로 들어 갈수 있다.
-```
+```bash
 sudo Docker exec -it 68bbe /bin/bash
 ```
 그리고 로그 확인
-```
+```bash
 cat /tmp/uwsgi.log
 ```
 아니면 `EC2`로 들어가기 전에 해당 `EB`의 로그를 모두 가져 올수도 있다.
-```
+```bash
 eb logs
 ```
 이 로그중에 `/var/log/eb-activity.log` 부분에 오류 잘 나온다.
@@ -183,7 +183,7 @@ eb logs
 로그를 확인해보면 아마도 `base.json` 을 읽지 못했다는 오류가 발생 할 것이다.
 이것은 `.gitignore`에 `.secrets`가 포함되어 있는데 이거 때문에 도커에 전달이 되지 않는다. 배포를 할때 `EB`에서 복사하는 파일 목록에 해당 파일이 제외가 된다.
 그래서 `.gitignore`와 동일한 역활을 하는 `.ebignore`라는 파일을 만들어 `.secrets` 를 포함시키게 한다.
-```
+```bash
 # .ebignore
 !/.secrets
 ```
@@ -196,12 +196,12 @@ eb logs
 그런데 `.ebignore`를 사용하면 `.gitignore`의 내용이 무시 되는 경우가 있다고 한다. 그래서 `.ebiginre`를 없애고 배포 스크립트를 통해 해당 `.secrets`폴더를 깃의 `stage`에 올렸다가(`git add -f .secrets`) 배포후 다시 `stage`에서 빼는 작업(`reset HEAD .secrets`)을 해야 한다.
 ***만약 배포중 취소를 하게 되면 `.secrets`폴더는 `git`의 `stage`에 올라 가 있기 때문에 해당 타이밍에 `commit`이나 `reset --hard`를 하게되면 파일이 완전 삭제 되거나 `push`할 경우 깃허브에 중요한 정보들이 올라 갈 수 있으므로 주의를 요한다.***
 배포 스크립트인 `deploy.sh`를 만들고 `chmod`를 통해 사용 권한을 주자
-```
+```bash
 # deploy.sh
 #!/usr/bin/env bash
 git add -f .secrets && eb deploy --staged --profile=eb && git rest HEAD .secrets
 ```
-```
+```bash
 sudo chmod 755 deploy.sh
 ```
 그리고 해당 스크립트로 배포를 하면 된다.
@@ -217,7 +217,7 @@ EC2 내의 `/opt/elasticbeanstalk/hooks/appdeploy/<시점>/<스크립트파일>`
 `appdepoly`를 사용하여 배포를 한후에 스크립트를 실행하게 하자.
 그럴려면 배포 스크립트를 만들어야 한다. `files` 키를 사용하여 EC2 인스턴스에서 파일을 생성 할 수 있다. 콘텐츠는 구성파일의 인라인이거나 URL에서 내용을 가져 올 수 있다.
 `.ebextensions`에 `00_command_files.config`를 만들고 커맨드파일을 만들게 하자. 그리고 만들어진 스크립트는 `container_commands`라는 옵션을 통해 배포가 되기 전에 임시 파일을 만들고 배포후에 해당 파일이 있으면 실행하게 하자.
-```
+```bash
 files:
   "/opt/elasticbeanstalk/hooks/appdeploy/post/01_migrate.sh":
     mode: "000755"
@@ -261,14 +261,14 @@ files:
 1. `STATICFILES_STORAGE`를 기본 값으로 만들어 준다.
 `settings`의 `dev`, `production`에 `STATICFILES_STORAGE = 'config.storage.StaticFilesStorage'`를 주석 처리
 2. `nginx-app.conf` 에 `/static/` URL 서빙
-```
+```python
     ...
     location /static/ {
         alias /srv/project/.static/;
     }
 ```
 3. `config/settings`에 `STATIC_ROOT`, `STATIC_URL`설정
-```
+```python
 STATIC_ROOT = os.path.join(ROOT_DIR, '.static')
 STATIC_URL = '/static/'
 ```

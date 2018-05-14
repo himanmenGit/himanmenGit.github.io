@@ -13,11 +13,12 @@ tags:
 ### add
 * 변수에 값을 추가함.
 * 두 값을 정수로 강제 변환. 정수로 변환이 되면 더하기가 됨.
+
 ```html
 # value가 4면 6이 나옴
 {{ value|add:"2" }}
 # first가 [1,2,3] second가 [4,5,6] = [1,2,3,4,5,6]이 나옴
-{{ first|add:second}}
+{{ first|add:second }}
 ```
 
 ### addslashes
@@ -437,6 +438,7 @@ You have {{ num_walruses }} walrus{{ num_walruses|pluralize:"es" }}
 * `STATIC_ROOT`에 저장된 정적 파일에 연결
 * `STATICFILES_STORAGE`에 지정된 저장공간의 `url()` 메소드를 사용하여 파일을 제공
 * as를 사용하여 이름 사용 가능
+
 ```html
 {% load static %}
 <img src="{% static "images/h1.jpg" %}" alt="Hi" />
@@ -446,6 +448,7 @@ You have {{ num_walruses }} walrus{{ num_walruses|pluralize:"es" }}
 
 ### get_static_prefix
 * 정적 템플릿이 삽입되는 정확한 위치와 방법을 제어 하기 위해 사용
+
 ```html
 {% load static %}
 <img src="{% get_static_prefix %}images/h1.jpg" alt="Hi!" />
@@ -453,6 +456,7 @@ You have {{ num_walruses }} walrus{{ num_walruses|pluralize:"es" }}
 
 ### get_media_prefix
 * `get_static_prefix`와 마찬가지로 사용
+
 ```html
 {% load static %}
 <body data-media-url="{% get_media_prefix %}">

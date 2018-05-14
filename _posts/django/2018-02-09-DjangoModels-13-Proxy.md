@@ -20,7 +20,7 @@ tags:
 원래 모델에 대한 프록시를 만드면 프록시 모델의 인스턴스를 생성, 삭제, 업데이트를 할 수 있으며 원래 모델을 사용하는것 처럼 모든 데이터가 저장된다. 차이점은 원본을 변경하지 않고 프록시의 기본 모델 순서 또는 기본 매니저와 같은 것을 변경 할 수 있다는 것.
 
 `Meta Class`에 `Proxy=True`를 설정하여 사용 할 수 있다.
-```
+```python
 from django.db import models
 
 __all__ = (
@@ -61,7 +61,7 @@ class Staff(User):
         return f'{self.name} (스태프)'
 ```
 쉘에서 보면
-```
+```python
 u1, u2, u3 = [User.objects.create(name=name) for name in ['장동건', '손지창', '기무라']]
 # ..models.User
 u1.__class__
@@ -83,7 +83,7 @@ admin.drop(ue)
 User.objects.all()
 ```
 이렇게 기능별로 나누어 사용하면 실수할 가능성을 많이 줄일수 있고 매니저를 따로 두어 관리 할 수 도 있다.
-```
+```python
 from django.db.models.manager import Manager
 
 class User(models.Model):
@@ -113,7 +113,7 @@ class Staff(User):
     ...
 ```
 이런식으로 만들면 `get_query_set`을 통해 매니저에서 기본적으로 가져오는 쿼리셋을 변경 할 수 있다. 기본적으로 전체 데이터를 가져 오지만 프록시 모델에 기본 매니저를 재정의 하여 필터링을 한것을 기본으로 가져 온다.
-```
+```python
 u1.is_admin=True
 u1.save()
 u2.is_staff=True

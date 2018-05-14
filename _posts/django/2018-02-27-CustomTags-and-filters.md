@@ -26,7 +26,7 @@ tags:
 장고 템플릿의 불편한점은 여러개의 인수를 한번에 받지 못한다. 하나의 인수만 받아 처리 하는 경우가 많다 다른 템플릿을 사용하는 경우도 있다.
 
 그리고 예외 처리를 제공하지않고 모든 예외는 서버 오류로 표기된다.]
-```
+```python
 from django import template
 
 register = template.Library()
@@ -40,7 +40,9 @@ def ellipsis_line(value, arg):
     return value
 ```
 
-```
+{% raw %}
+```html
 # HTML
 {{ some.text|ellipsis_line:5|linebreaksbr }}
 ```
+{% endraw %}

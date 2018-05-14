@@ -15,7 +15,7 @@ tags:
 재귀 관계 모델도 사용가능 하다.
  
 기본적인 일대일 관계를 장소와 레스토랑 그리고 웨이터로 표현하면 이렇게 된다.
-```
+```python
 from django.db import models
 
 
@@ -52,7 +52,7 @@ class Waiter(models.Model):
 
 ```
 객체를 만들때 장소에 붙어 있는 레스토랑을 만들고 싶은경우 `ForeignKey`와 흡사 하게 만든다
-```
+```python
 p1 = Place.objects.create(name='Demon Dogs', address='944 W. Fullerton')
 p2 = Place.objects.create(name='Ace Hardware', address='1013 N. Ashland')
 
@@ -63,7 +63,7 @@ r = Restaurant.objects.create(
 )
 ```
 그리고 레스토랑과 장소의 관계를 기본적으로 접근 하는 방법을 보자.
-```
+```python
 # 레스토랑에서 장소 접근 가능
 # <Place: Demon Dogs the place>
 r.place
@@ -79,7 +79,7 @@ p1.restaurant
 
 ### hasattr()
 속성이 있는지 확인 할수 있는 함수
-```
+```python
 # True
 hasattr(p1, restaurant')
 # False

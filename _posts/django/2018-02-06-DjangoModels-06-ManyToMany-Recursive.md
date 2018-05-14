@@ -12,7 +12,7 @@ tags:
 자기 자신을 `ManyToManyField`로 `self`를 가지는 형태의 모델
 
 가장 일반 적인 모델인 페이스북를 예로 들어 보면 자신을 상대로 한명의 친구를 추가 하면 서로 친구인 관계가 된다. 한마디로 `나는 너의 친구 == 너는 나의 친구`
-```
+```python
 from django.db import models
 
 __all__ = (
@@ -32,7 +32,7 @@ class FacebookUser(models.Model):
         )
 ```
 **Shell에서 여러명의 페북 유저를 만드는 방법 리스트컴프리헨션을 사용해보자**
-```
+```python
 f1, f2, f3 = [FacebookUser.objects.create(name=name) for name in ['장동건', '손지창', '기무라']]
 
 f1.friends.add(f2)

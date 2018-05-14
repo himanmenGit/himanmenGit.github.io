@@ -16,7 +16,7 @@ tags:
 하지만 같은 모델에 대해 `ForeignKey`를 두개 쓰고 있기 때문에 역 참조시 어떤 모델을 참조해야 하는지에대한 부분이 불분명 해진다. 그래서 마이그레이션을 할 수 없다. 이 것을 해결하기 위해 `Relation`모델에 있는 각 `ForeignKey`들에 `related_name`을 지정 해 주어야 한다.
 
 
-```
+```python
 from django.db import models
 
 
@@ -68,7 +68,8 @@ class Relation(models.Model):
     type = models.CharField(max_length=1, choices=CHOICES_TYPE)
 ```
 이제 서로 관계를 생성해보자
-```
+
+```python
 u1, u2, u3, u4 = [TwitterUser.objects.create(name=name) for name in ['장동건', '손지창', '기무라', '타쿠야']]
 # u1.relations.add(u2) # X 이건 실행 안됨.
 # 중개 모델에서는 중개 테이블의 인스턴스를 직접 만들어야 함.
@@ -80,40 +81,40 @@ u1, u2, u3, u4 = [TwitterUser.objects.create(name=name) for name in ['장동건'
 u1.relations_by_from_user.create(to_user=u3, type='f')
 ```
 **u1이 팔로우 한 유저 목록을 받아옴**
-```
+```python
 u1.relations.all()
 ```
 그런데 문제가 하나 있다. 이렇게 가져오면 `u1`과 관계된 유저 목록에서 상대방을 `follow`했는지 `block`했는지 구분 할 수가 없다. 그럴 경우 `TwiiterUser`모델에서 필터를 걸수 없다. 그래서 `Relations`모델에서 인스턴스를 가져와 필터링을 해야 한다
 
 **u1이 from_user인 Relations를 모두 가져옴**
-```
+```python
 u1.relations_by_from_user.all()
 
 ```
 **그중에 follow인 Relations와 block인 Relations를 가져옴**
-```
+```python
 # follow
 u1.relations_by_from_user.filter(type='f')
 # block
 u1.relations_by_from_user.filter(type='b')
 ```
 **u1이 follow하고 있는 유저 pk리스트**
-```
+```python
 u1.relations_by_from_user.filter(type='f').values_list('to_user', flat=True)
 ```
 **이렇게도 사용할 수 있다.**
-```
+```python
 Relation.objects.filter(from_user=u1, type='f').values_list('to_user', flat=True)
 ```
 이렇게 u1이 팔로우 하고 있는 유저 pk리스트를 가져 와서 유저를 쿼리필터를 통해 찾아 낼 수 있다.
-```
+```python
 u1_following_pk_list = u1.relations_by_from_user.filter(type='f').values_list('to_user', flat=True)
 # <손지창>
 TwitterUser.objects.filter(pk__in=u1_following_pk_list)
 ```
 > `values`는 해당 쿼리셋에서 각각을 키/값 딕셔너리로 바꾸어 반환한다. 그리고 `values_list`는 딕셔너리가 아닌 리스트형태로 값들을 튜플로 만들어 리스트에 담아 반환한다. 여기에 원하는 필드만 지정하여 `values_list('pk')` 가져 올 수 있다. 그리고 `flat`은 가져오는 필드들을 주어진 요소가 하나라는 가정하에 튜플을 리스트에 담는것이 아닌 하나의 리스트에 요소들을 그냥 담아 주는 것이다.
 
-```
+```python
 # <Query Set[{'id':1, 'name':'장동건'}, {'id':2 ...
 TwitterUser.objects.values()
 
@@ -128,7 +129,7 @@ TwitterUser.objects.values_list('pk', flat=True)
 ```
 
 이렇게 만들어진 쿼리문들을 이용하여 필요한 정보를 가져오는 프로퍼티를 만들 수 있다
-```
+```python
 class TwitterUser(models.Model):
     ....
     @property
@@ -148,13 +149,13 @@ class TwitterUser(models.Model):
         return following_users
 ```
 이렇게 만들어진 프로퍼티를 사용하면 내가 팔로잉 하고 있는 유저의 목록을 가져 올 수 있다.
-```
+```python
 u1 = TwitterUser.objects.get(pk=1)
 # 손지창 기무라
 u1.following
 ```
 나를 `follow` 하고 있는 유저 목록을 가져 오는 것
-```
+```python
 class TwitterUser(models.Model):
     ....
     @property
@@ -164,7 +165,7 @@ class TwitterUser(models.Model):
         return TwitterUser.objects.filter(pk__in=follower_pk_list)
 ```
 그리고 유저가 `to_user`를 팔로우 하는 함수를 만들어 보자
-```
+```python
 class TwitterUser(models.Model):
     ....
     def follow(self, to_user):
@@ -177,11 +178,11 @@ class TwitterUser(models.Model):
         )
 ```
 사용은
-```
+```python
 u1.follow(to_user=u3)
 ```
 유저를 `block`하고 싶다면
-```
+```python
 class TwitterUser(models.Model):
     ....
     def block(self, to_user):
@@ -193,12 +194,12 @@ class TwitterUser(models.Model):
             type=Relation.RELATION_TYPE_BLOCK,
         )
 ```
-```
+```python
 u1.block(uo_user=u4)
 ```
 
 유저가 `block`한 다른 유저 목록을 가져옴
-```
+```python
 class TwitterUser(models.Model):
     ....
     @property
@@ -212,7 +213,7 @@ class TwitterUser(models.Model):
 ```
 이렇게 하면 하나의 문제가 생기는데 내가 `follow`한 사람을 `block`시키면 두가지 상태를 모두 가지는 유저가 생기게 된다. `block`에 유저가 들어가면 `follow`관계가 없어져야 한다. 이것을 데이터 베이스 차원에서 제한을 걸어 줄 수 있다.
 그리고 해당 관계의 생성 시간을 넣어 보자
-```
+```python
 class Relation(models.Model):
     ....
     created_date = models.DateTImeField(auto_now_add=True)
@@ -234,7 +235,7 @@ class Relation(models.Model):
 
 그리고 같은 유저에 대해 `follow`와 `block`을 하려면 에러가 날 것이다.
 # auto_now_add, auto_now
-```
+```python
 # 처음으로 객체가 만들어 지는 순간에만 현재 시간을 기록
 created_date = models.DateTImeField(auto_now_add=True)
 # 객체가 업데이트 될 때마다 시간을 재 기
@@ -242,7 +243,7 @@ modified_date = models.DateTImeField(auto_now=True)
 ```
 
 마지막으로 내가 임의의 유저를 `follow`하고 있는지 임의의 유저가 나를 `follow`하고 있는지 확인하는 함수를 만들어 보자
-```
+```python
 class Relations:
     ....
     def is_followee(self, to_user):

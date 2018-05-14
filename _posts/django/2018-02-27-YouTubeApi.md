@@ -15,12 +15,12 @@ tags:
 그리고 `YouTube Data API v3`들어가서 사용 설정 해주기.
 사용자 인증 정보 만들기 접속. 구성설정 웹 서버, 공개 데이터 설정후 `어떤 사용자 인증 정보가 필요한가요?` 클릭. 완료!
 이후 인증 정보의 API키 의 키를 복사 하여 장고의 `settings.py`에 넣자
-```
+```python
 # settings.py
 YOUTUBE_API_KEY = <YouTube API Key>
 ```
 그리고 `requests`를 이용하여 요청을 날려서 데이터를 받아온다.
-```
+```python
 import requests
 def youtube(request):
     url = 'https://www.googleapis.com/youtube/v3/search'

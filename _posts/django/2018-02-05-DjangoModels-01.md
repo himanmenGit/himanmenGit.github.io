@@ -53,7 +53,7 @@ tags:
 **choices**
 * 튜플 형태의 반복 가능한 선택 항목 으로 이것이 주어지면 폼은 기본 텍스트 필드 대신 선택 상자로 바뀌고 주어진 선택 사항으로 항목을 제한함.
 
-```
+```python
 SHIRT_SIZE = (
     ('S', 'Small'),
     ('M', 'Medium'),
@@ -63,7 +63,7 @@ SHIRT_SIZE = (
 shirt_size = models.CharField(max_length=1, choices=SHIRT_SIZE)
 ```
     
-```
+```python
 def __str__(self):
     return f'{self.get_shirt_size_display()}'
 ```
@@ -94,7 +94,7 @@ def __str__(self):
 
 ### 자세한 필드 이름 ( Verbose field names)
 `ForeignKey, ManyToManyField`, `OneToOneField`를 제외한 각 필드 유형은 선택적인 첫 번째 위치 인수에 `Verbose name`을 사용한다. `Verbose name`이 주어지지 않으면 장고는 필드의 속성 이름을 사용하여 밑줄을 공백으로 변환 자동으로 생성 한다.
-```
+```python
 name = models.CharField('이름', ...)
 ```
 그리고 관계형 필드의 경우 반드시 `verbose_name`이라는 키워드 인자를 사용하여야 한다. 관계형 필드는 첫 번째 인자가 어디와 관계 할 것인지 가르키고 있기 때문이다.

@@ -14,7 +14,7 @@ tags:
 ### Field.clear(value)
 * 각 `Field` 인스너스에는 `clean()` 메서드가 있다.
 * 이는 단일 인수를 사용하여 `django.forms.ValidationError` 를 발생 시키거나 클린 값을 반환한다.
-```
+```python
 f = forms.EmailField()
 f.clean('foo@example.com')
 # foo@example.com
@@ -31,7 +31,7 @@ f.clean('Invalud email address')
 * 기본적으로 각 `Field` 클래스는 값이 필요 하다고 가정.
 * `None`또는 빈문자열 중 하나를 전달하면 `clean()`은 `ValidationError`을 발생.
 * 기본 값 은 `required=True`
-```
+```python
 from django import forms
 f = forms.CharField()
 f.clean('foo')
@@ -47,7 +47,7 @@ f.clean(0)
 f.clean(True)
 # True
 ```
-```
+```python
 f = forms.CharField(required=False)
 f.clean('foo')
 # foo
@@ -64,7 +64,7 @@ f.clean(0)
 ### Label
 #### Field.Label
 * `label`인수를 사용하여 레이블을 `Form`에 표시 될때 적용할 수 있다.
-```
+```python
 from django import forms
 class CommentForm(forms.Form):
     name = forms.CharField(label='이름')
@@ -81,7 +81,7 @@ print(f)
 ### label_suffix
 #### Field.label_suffix
 * `label_suffix`를 사용하면 각 필드의 `label`값 뒤에 오는 접미사 `:`등을 재정의 할 수 있다.
-```
+```python
 class ContactForm(forms.Form):
     age = forms.IntegerField()
     nationality = forms.CharField()
@@ -99,7 +99,7 @@ print(f.as_p())
 #### Field.initial
 * 각 필드에 대하여 기본 값을 제공 할 수 있다.
 * `value='initial'`
-```
+```python
 from django import forms
 class CommentForm(forms.Form):
     name = forms.CharField(initial='이름')
@@ -126,7 +126,7 @@ print(f)
 ### widget
 #### Field.widget
 * 위젯 인수를 사용하여 필드를 렌더링 할 떄 사용할 위젯 클래스를 지정 할 수 있다.
-```
+```python
 from django import forms
 class CommentForm(forms.Form):
     name = forms.CharField()
@@ -138,7 +138,7 @@ class CommentForm(forms.Form):
 #### Field.help_text
 * `help_text`를 사용하여 필드에 설명 텍스트를 지정 할 수 있다.
 * `HTML` 이스케이프 처리 되지 않는다.
-```
+```python
 from django import forms
 class HelpTextContactForm(forms.Form):
     subject = forms.CharField(max_length=100, help_text='100 characters max.')
@@ -150,31 +150,31 @@ print(f.as_table())
 print(f.as_ul())
 ```
 
-  ```HTML
-  <!-- as_table() -->
-  <tr><th>Subject:</th><td><input type="text" name="subject" maxlength="100" required /><br /><span class="helptext">최대 100문자</span></td></tr>
-  <tr><th>Message:</th><td><input type="text" name="message" required /></td></tr>
-  <tr><th>Sender:</th><td><input type="email" name="sender" required /><br /><span class="helptext">이메일 주소를 확인해 주세요</span></td></tr>
-  <tr><th>Cc myself:</th><td><input type="checkbox" name="cc_myself" /></td></tr>
+```html
+<!-- as_table() -->
+<tr><th>Subject:</th><td><input type="text" name="subject" maxlength="100" required /><br /><span class="helptext">최대 100문자</span></td></tr>
+<tr><th>Message:</th><td><input type="text" name="message" required /></td></tr>
+<tr><th>Sender:</th><td><input type="email" name="sender" required /><br /><span class="helptext">이메일 주소를 확인해 주세요</span></td></tr>
+<tr><th>Cc myself:</th><td><input type="checkbox" name="cc_myself" /></td></tr>
 
-  <!-- as_ul() -->
-  <li>Subject: <input type="text" name="subject" maxlength="100" required /> <span class="helptext">최대 100문자</span></li>
-  <li>Message: <input type="text" name="message" required /></li>
-  <li>Sender: <input type="email" name="sender" required /> <span class="helptext">이메일 주소를 확인해 주세요</span></li>
-  <li>Cc myself: <input type="checkbox" name="cc_myself" /></li>
+<!-- as_ul() -->
+<li>Subject: <input type="text" name="subject" maxlength="100" required /> <span class="helptext">최대 100문자</span></li>
+<li>Message: <input type="text" name="message" required /></li>
+<li>Sender: <input type="email" name="sender" required /> <span class="helptext">이메일 주소를 확인해 주세요</span></li>
+<li>Cc myself: <input type="checkbox" name="cc_myself" /></li>
 
-  <!-- as_p -->
-  <p>Subject: <input type="text" name="subject" maxlength="100" required /> <span class="helptext">최대 100문자</span></p>
-  <p>Message: <input type="text" name="message" required /></p>
-  <p>Sender: <input type="email" name="sender" required /> <span class="helptext">이메일 주소를 확인해 주세요</span></p>
-  <p>Cc myself: <input type="checkbox" name="cc_myself" /></p>
-  ```
+<!-- as_p -->
+<p>Subject: <input type="text" name="subject" maxlength="100" required /> <span class="helptext">최대 100문자</span></p>
+<p>Message: <input type="text" name="message" required /></p>
+<p>Sender: <input type="email" name="sender" required /> <span class="helptext">이메일 주소를 확인해 주세요</span></p>
+<p>Cc myself: <input type="checkbox" name="cc_myself" /></p>
+```
 
 ### error_messages
 #### Field.error_messages
 * `error_messages` 인수를 사용하여 필드에서 발생 하는 기본 메시지를 대체 가능.
 * 덮어 쓰려는 오류 메시지와 일치하는 키 딕셔너리를 전달.
-```
+```python
 from django import forms
 generic = forms.CharField()
 generic.clean('')
@@ -501,7 +501,7 @@ invalid_choice 오류 메시지에는 %{value)s가 포함될 수 있으며, 이�
 
 #### fields
 * 필드값의 유효성을 검사 하는데 사용해야하는 필드 리스트
-```
+```python
 from django.forms import ComboField
 f = ComboField(fields=[CharField(max_lenfth=20), EmailField()])
 f.clean('test@example.com')
@@ -528,7 +528,7 @@ f.clean('longemailaddress@example.com')
 * `False`로 할 경우 `Field.required`를 개별적으로 적용이 가능함. `required field`에 제공된 값이 없으면 유효성 검증 오류 발생
 * `MultiValueField`의 하위클래스에서 기본 불완전 오류메세지를 정의 하거나 각 필드마다 다른 메시지를 정의 할 수 있다.
 
-```
+```python
 from django.core.validators import RegexValidator
 
 class PhoneField(MultiValueField):
@@ -589,7 +589,7 @@ class PhoneField(MultiValueField):
 * 두 필드 모두 필드에 대한 선택 사항을 만드는데 사용하는 단일 `queryset` 매개 변수가 필요하다.
 * 폼 유효성 검사시 이 필드는 하나의 모델 객체 (`ModelChoiceField`의 경우) 또는 여러 모델 객체 ('ModelMultipleChoiceField'의 경우)를 폼의 cleaned_date 딕셔너리에 위치한다.
 * 더 복잡한 사용의 경우 폼 필드를 선언할 때 `query=None`를 지정한다음 폼의 `__init__()`메소드에서 `qureyset`을 채울수 있다.
-```
+```python
 class FooMultipleChoiceForm(forms.Form):
     foo_select = forms.ModelMultipleChoiceField(queryset=None)
 
@@ -613,7 +613,8 @@ class FooMultipleChoiceForm(forms.Form):
 #### empty_label
 * 기본적으로 `ModelChoiceField`에서 사용하는 `<select>` 위젯은 리스트의 가장위에 빈 선택 항목을 가진다.
 * `empty_label`속성을 사용하여 이 레이블의 텍스트를 변경하거나 `empty_label`을 `None`으로 설정하여 빈 레이블을 완전히 비활성화 시킬수 있다.
-```
+
+```python
 # A custom empty label
 field1 = forms.ModelChoiceField(quertset=..., empty_label="(Nothing)")
 
@@ -625,11 +626,11 @@ field2 = forms.ModelChoiceField(queryset=..., empty_label=None)
 * 이 옵션 인수는 필드의 위젯에서 선택값으로 사용할 필드를 지정하는데 사용.
 * 모델의 유니크 필드 인지 확인. 아니면 선택한 값이 두개 이상의 객체와 일치 가능.
 * 기본적으로 `None`으로 설정 각 객체의 기본키가 사용
-```
+```python
 # No custom to_field_name
 field1 = forms.ModelChoiceField(queryset=...)
 ```
-```HTML
+```html
 <select id="id_field1" name="field1">
   <option value="obj1.pk">Object1</option>
   <option value="obj2.pk">Object2</option>
@@ -637,11 +638,11 @@ field1 = forms.ModelChoiceField(queryset=...)
 </select>
 ```
 그리고
-```
+```python
 # to_field_name provided
 field2 = forms.ModelChoiceField(queryset=..., to_field_name="name")
 ```
-```HTML
+```html
 <select id="id_field12" name="field12">
   <option value="obj1.name">Object1</option>
   <option value="obj2.name">Object2</option>
@@ -651,7 +652,7 @@ field2 = forms.ModelChoiceField(queryset=..., to_field_name="name")
 * 모델의 `__str__()`메서드가 호출되어 필드의 선택에 사용할 객체의 문자열 표현을 생성.
 * 커스텀 표현을 제공하려면 `ModelChoiceField`를 서브 클래스화 하여 `label_from_instance`를 대체하라.
 * 이 메서드는 모델 객체를 수신하고 모델 객체를 나타내는 데 적합한 문자열을 반환해야 한다.
-```
+```python
 from djnago.forms import ModelChoiceField
 class MyModelChoiceField(ModelChoiceField):
     def label_from_instance(self, obj):

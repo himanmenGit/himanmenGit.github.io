@@ -9,7 +9,7 @@ tags:
 
 # Meta options
 모델 자체에 메타 데이터를 주고 싶은 경우
-```
+```python
 class Meta:
     ....
 ```
@@ -39,7 +39,7 @@ class Meta:
 
 ### 이미 정의돈 메소드들을 재정의 하고 싶은 경우
 `save()`와 `delete()`에 관련된 메소드들을 재정의 하고 싶은 경우가 많다.
-```
+```python
 class Blog(models.Model):
     ...
     def save(self, *args, **kwargs):

@@ -18,7 +18,7 @@ tags:
 
 이 모델의 장점을 부모 모델에 대해 직접 쿼리가 가능 하다는 것이다. 자식 모델에 대한 공통된 정보를 가져오기에 편리하다.
 
-```
+```python
 from django.db import models
 
 __all__ = (
@@ -44,12 +44,12 @@ class Restaurant(Place):
 ```
 
 레스토랑을 만들어 보자
-```
+```python
 #<Restaurant: Restaurant 맥도날드 | 신사역>
 Restaurant.objects.create(name='맥도날드', address='신사역', serves_hot_dogs=True)
 ```
 이렇게 만들어진 모델의 자동으로 생성된 `OneToOneField`는 이렇게 생겼다
-```
+```python
 place_ptr = models.OneToOneField(
     Place, on_delete=models.CASCADE,
     # 이 필드가 부모와의 링크를 나타내기 위해 존재 한다는걸 표현함

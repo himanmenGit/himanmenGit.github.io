@@ -9,7 +9,7 @@ tags:
 
 # Proxy Custom Manager
 
-```
+```python
 from django.db import models
 from django.db.models import Manager
 
@@ -56,7 +56,7 @@ class MyPerson2(Person, ExtraManagerModel):
 
  마지막으로 이 예제에서는 추가 매니저를 자식 클래스에 추가하려고 하지만 여전히 `AbstractBase`의 기본값을 사용한다고 가정. 자식 클래스에 새 매니저를 직접 추가 할 수는 없다. 기본 값을 무시 하므로 `AbstractBase class`의 모든 매니저를 명시적으로 포함해야 한다. 해결방법은 여분의 매니저를 다른 부모 클래스에 넣고 기본 값 다음에 상속해야 한다.
  
- ```
+ ```python
 from inheritance.proxy_manager.models import *
 
 MyPerson1.objects

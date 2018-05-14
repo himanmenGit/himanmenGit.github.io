@@ -31,7 +31,8 @@ tags:
 폼 클래스로 만든 인스턴스를 컨텍스트로 전달한 다음에 그 컨텐스트로 전달된 값을 HTML markup으로 렌더링 하면 된다.
 
 폼 클래스를 만들어 보자.
-```pyhton
+
+```python
 from django import forms
 
 class NameForm(forms.Form):
@@ -44,7 +45,8 @@ class NameForm(forms.Form):
 모든 필드에 유효한 데이터가 들어 있으면 `True`가 리턴되고 해당 폼에 `cleaned_data`라는 속성이 추가 되고 폼에 들어있는 데이터가 `cleaned_data`로 이돟한다. 만약 모두 유효하지 못한 데이터가 있을 경우 `False`가 리턴되고 그 중 유효한 데이터만이 `cleaned_data`로 이동한다.
 
 뷰에서 일반적으로 사용 하는 방법.
-```
+
+```python
 from django.shortcuts import render
 form django.http import HttpResponseRedirect
 
@@ -68,6 +70,7 @@ def get_name(request):
     
     return render(request, 'name.html', {'form':form})
 ```
+
 {% raw %}
 ```html
 <form action="" method="POST">
@@ -92,7 +95,7 @@ def get_name(request):
 그런데 POST요청이 올 경우 폼에 데이터를 바인딩 하여 다시 만든다. 그리고 `is_valid()`를 호출하여 유효성 검사 통과 여부에 따라 어떤 폼이 들어 갈지 판단 하여 컨텍스트에 전달하여 템플릿으로 렌더링 한다. 그리고 유효성 검사를 통과 한 데이터는 `form.cleaned_data`로 접근하여 가져 올 수 있다. 그리고 에러를 넣어주고 싶을 경우 `form.add_error`를 사용하면 된다.
 
 아니면 폼 클래스 내에서 폼 필드에 대해 사용자 정의 유효성 검사를 해줄수 있다.
-```
+```python
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 User = get_user_model()

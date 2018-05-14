@@ -24,7 +24,7 @@ tags:
 
 공통 `ID` 기본 키 필드가 있는 여러 모델을 상속하면 오류가 발생한다. 다중 상속을 적절하게 사용하려면 부모 모델에서 명시적으로 `AutoField`를 사용하여 오류를 막을수 있다.
 하지만 해당 사용법은 관리하기가 힘드므로 사용하지 않기를 권한다.
-```
+```python
 from django.db import models
 
 
@@ -42,7 +42,7 @@ class BookReview(Book, Article):
     pass
 ```
 아니면 공통 조상을 사용하여 자동 필드를 유지한다. 이렇게 하려면 자동으로 생성되고 자식에서 상속되는 필드 사이의 충돌을 피하기 위해 각 부모 모델에서 공통 조상을 명시적으로 `OneToOneField`를 사용해야 한다.
-```
+```python
 from django.db import models
 
 

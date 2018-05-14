@@ -12,7 +12,7 @@ tags:
 만약 `admin`에 `UserAdmin` 을 사용한다면 사용자 정의 User에 추가한 필드는 관리자 페이지에 나오지 않는다. 나오게 하기 위해서 `fieldsets`을 정의 해 주어야 한다.
 만약 User에 `nickname`과 `img_profile`를 추가 했다고 한 경우에는
 
-```
+```python
 # admin.py
 from django.contrib import admin
 from django.contrib.auth import get_user_model
