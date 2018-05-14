@@ -38,7 +38,7 @@ tags:
 * DB는 공유 하면서 실제 보여지는 화면은 다르게.
 
 ### Django 프로젝트 만들기
-```
+```bash
 mkdir django-project
 cd django-project
 pyenv virtualenv 3.6.4 pyenv-name
@@ -71,7 +71,7 @@ git remote ...
 * json 에서는 따옴표 한개`'` 짜리는 지원 하지 않음. `"` 쓸것.
 * 마지막에 쉼표가 붙으면 안된다.
 
-```
+```python
 # .secrets/base.json
 {
   "SECRET_KEY" : "key...asdasd"
@@ -122,7 +122,7 @@ EC2 -> uWSGI(8000) -> Django(wsgi모듈)
 EC2 -> Nginx(Nginx virtual server) <->(Unix Socket) uWSGI -> Django
 
 * uWSGI를 소켓모드로 실행
-```
+```bash
 /home/ubuntu/.pyenv/versions/runserver-test/bin/uwsgi \
 --socket /tmp/app.sock \
 --home /home/ubuntu/.pyenv/versions/runserver-test \
@@ -135,7 +135,7 @@ EC2 -> Nginx(Nginx virtual server) <->(Unix Socket) uWSGI -> Django
 
 * EC2 -> Nginx(Nginx Configuration이 필요/virtual server) ->(Unix socket) -> uWSGI -> Django
 * nginx의 설정파일은 
-```
+```bash
 cd /etc/nginx/sites-available
 ```
 * `nginx`의 `default`파일이 존재
@@ -145,7 +145,7 @@ cd /etc/nginx/sites-available
 ## nginx default
 * nginx는 시작시 모든 nginx sites-enabled 파일에 대해 검사를 한다.
 
-```
+```bash
 # listten 80, 80번 포트에 대해서 응답을 받음, default_server는 도메인에 일치하지 않는(특정 가상서버를 가리키지 않을경우) 기본적으로 80번 포트가 응답 받는다.
 listen 80 default_server;
 
@@ -165,7 +165,7 @@ location / {
 ```
 
 `vi /ect/nginx/sites-available/app`으로 설정파일 nginx의 설정파일을 만듬.
-```
+```bash
 server {
         listen 80;
         server_name *.amazonaws.com;
@@ -210,7 +210,7 @@ server {
 		(app의 link)
 		app
 ```
-```
+```bash
 sudo ln -s ../sites-available/app app
 sudo rm default
 ```
@@ -246,13 +246,13 @@ ln -s는 바로가기 수준의 복사를 하는 것.
 * name, value, section, comment로 이루어짐
 
 ### uWSGI 설정 파일 만들기
-```
+```bash
 vi /srv/runserver-test/uwsgi.ini
 ```
 
 * 설정 파일을 만들고 내용을 넣는다.
 
-```
+```bash
 runserver-test Django프로젝트에 대한 uwsgi설정파일
 [uwsgi]
 chdir = /srv/runserver-test/mysite
@@ -268,7 +268,7 @@ vacuum = true
 ```
 * .ini 파일을 기준으로 실행
 
-```
+```bash
 /home/ubuntu/.pyenv/versions/runserver-test/bin/uwsgi -i /srv/runserver-test/uwsgi.ini 
 ```
 
@@ -287,19 +287,19 @@ scp로 ssh 개인키를 써서 나의 프로젝트 경로를 우분투서버의 
 
 scp -i 자동인증용 옵션을 사용하여 인증한다.
 scp -r(리커시브 약자) 폴더를 복사 할때 항상 -r을 써야함
-```
+```bash
 scp -i ~/.ssh/fc-7th.pem \
 -r ~/projects/django/deploy/ec2-deploy \
 ubuntu@ec2-13-124-48-143.ap-northeast-2.compute.amazonaws.com:/srv/ec2-deploy
 ```
 하기전 이미 있던 파일은 지우는것도 좋다
-```
+```bash
 ssh -i ~/.ssh/fc-7th.pem ubuntu@ec2-13-124-48-143.ap-northeast-2.compute.amazonaws.com rm -rf /srv/ec2-deploy
 ```
 
 * 한땀한땀 치기 힘드므로 shell의 alias로 만들어 보자
 
-```
+```bash
 # scp
 EC2_USER="ubuntu"
 EC2_DOMAIN="ec2-13-124-48-143.apnortheast-2.compute.amazonaws.com"
@@ -328,7 +328,7 @@ uWSGI
 ```
 * .config 에 uwsgi.service 파일 만듬
 
-```
+```bash
 [Unit]
 Description=EC2 Deploy uWSGI service
 after=syslog.target
@@ -347,11 +347,11 @@ WantedBy=multi-user.target
 ```
 * 서버의시작프로그램 느낌의 폴더안에 .service복사
 
-```
-➜  /srv sudo cp -f /srv/ec2-deploy/.config/uwsgi.service /etc/systemd/system/uwsgi.service # .service 파일 복사
-➜  /srv sudo systemctl enable uwsgi # uwsgi 적용
-➜  /srv sudo systemctl daemon-reload # 백그라운드 서비스에 리로드
-➜  /srv sudo systemctl restart uwsgi nginx # uwsgi 재시작 하면 에러남
+```bash
+/srv sudo cp -f /srv/ec2-deploy/.config/uwsgi.service /etc/systemd/system/uwsgi.service # .service 파일 복사
+/srv sudo systemctl enable uwsgi # uwsgi 적용
+/srv sudo systemctl daemon-reload # 백그라운드 서비스에 리로드
+/srv sudo systemctl restart uwsgi nginx # uwsgi 재시작 하면 에러남
 # app.sock 파일의 권한이 없다.
 # uwsgi.ini 파일에 app.sock 생성 권한을 주는 셋팅을 하자..
 ```
@@ -376,7 +376,7 @@ WantedBy=multi-user.target
 
 * `/etc/systemd/system/uwsgi.service`에서 실행 명령어
 
-```
+```bash
 [Service]
 ExecStart=/home/ubuntu/.pyenv/versions/fc-ec2-deploy2/bin/uwsgi -i /srv/ec2-deploy/.config/uwsgi.ini
 ```
@@ -406,7 +406,7 @@ EC2-Deploy 프로젝트
 3. 옵션들을 정리한 ini파일을 사용해서 uwsgi --ini <ini파일경로>로 실행 후 접속 확인
 4. uwsgi서비스를 등록후 접속 확인 파일을 `/etc/systemd/system/`폴더에 복사
    
-```
+```bash
 sudo systemctl enable uwsgi
 sudo systemctl daemon-reload
 sudo systemctl restart uwsgi
@@ -426,7 +426,7 @@ sudo systemctl restart uwsgi
      
    5.4. 재시작
    
-```
+```bash
 sudo systemctl daemon-reload
 sudo systemctl restart nginx
 ```

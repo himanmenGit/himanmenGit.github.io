@@ -56,7 +56,7 @@ tags:
 * `퍼블릭(public)DNS`로 접근가능하다. 하지만 인스턴스가 중단 됬거나 다시 켜지면 바뀔 수 있다.
 * `퍼블릭DNS` 복사 
 
-```
+```bash
 ssh -i(identity file) <공개키 파일경로.pem> user_name@public_dns_name`
 ```
 * 사용자 이름은 설정 하지 않았다 
@@ -75,49 +75,49 @@ ssh -i(identity file) <공개키 파일경로.pem> user_name@public_dns_name`
 
 # EC2 Ubunut 환경 python&django 설정하기
 1. 패키지 관리자가 옛날 버전이라 apt를 업데이트 
-```
+```bash
 sudo apt-get update
 ``` 
 2. 기존에 깔려 있던 패키지도 업데이트 
-```
+```bash
 sudo apt-get dist-upgrade
 ```
 3. `Keep the local version currently installed` 선택
 4. pyenv Common Build problems 해결
-```
+```bash
 sudo apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev
 ```
 5. `pyenv-installer`를 이용해 설치 
-```
+```bash
 curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-installer | bash
 ```
 6. pyenv 설정 텍스트 복사 우분투는 PATH가 다르기 때문에 로컬설정과 다름
-```
+```bash
 export PATH="/home/ubuntu/.pyenv/bin:$PATH"
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 ```
 7. zsh 설치
-```
+```bash
 sudo apt-get install zsh
 ```
 8. ohmy zsh 설치 
-```
+```bash
 curl -L http://install.ohmyz.sh | sh
 ```
 9. 기본셸 zsh로 변경 ubuntu 유저에 대해서변경 
-```
+```bash
 sudo chsh ubuntu -s- `which zsh`
 ```
 10. 서버를 나갔다가 다시 들어가면 `zsh`로 바뀜 
 11. 이제 zhs 설정을 함 
-```
+```bash
 vi ~/.zshrc
 ```
 두번째 줄 주석 해제 Shift-g를 통해 마지막 줄로 가서 위에서 복사 해놓은 설정을 붙여 넣기 그런다음 서버 재접속이나 `source ~/.zshrc`로 설정 적용.
 
 12. `/srv`로 가서 프로젝트 폴더를 만듬 그런데 `/srv` 폴더는 root 권한임 그래서 `ubuntu`계정 권한으로 바꿔 줘야함
-    ```
+    ```bash
     # root/srv -> cd / srv/ 에 pyenv install 3.6.4 설치
     # /srv /var 디렉터리에 서비스를 많이 넣어 놓는다.
     # /srv - 서비스 디렉토리로 주로 인터넷 관련 파일이 위치.
@@ -133,13 +133,13 @@ vi ~/.zshrc
     ```
 
 13. 가상 환경을 만들어줌
-```
+```bash
 pyenv virtualenv 3.6.4 runserver-test
 pyenv local runserver-test
 ```
 
 14. 이후 장고 설치 및 프로젝트 생성후 `runserver` 확인
-```
+```bash
 pip install django
 django-admin startproject mysite
 cd mysite
@@ -149,8 +149,8 @@ cd mysite
 하지만 연결 안됨. 
 
 16. EC2안의 보안그룹안에 두개가 있는데 우리가 만든 EC2 Security Group를 선택 -> 인바운드로 가서 -> 편집 -> 규칙 추가 -> 사용자 지정 TCP|프로토콜 TCP|포트범위 8000|소스 위치무관|설명 Django runserver 로 추가, 저장한다. 이후 다시 접속 allowed_host 가 비어 있어서 에러가 남. `Django`의 `DEBUG` 가 `TRUE` 이면  `allowd_host`는 `['localhost', '127.0.0.1', '[::1]']`을 추가함. 에러가 나지 않도록 `mysite/settings.py`에 
-```
-ALLOWED_HOST [ 
+```python
+ALLOWED_HOST = [ 
     '.amazonaws.com', 
 ]
 ```
@@ -184,7 +184,7 @@ Browser(Client) ->
 ## nginx
 * 그래서 Nginx를 설치 해보자
 * apt에 등록되어 잇는 nginx는 최신 버전이 아니다 버전에 맞게 깔자.
-```
+```bash
 add-apt-repository ppa:nginx/stable
 apt-get update
 apt-get install nginx
@@ -195,7 +195,7 @@ nginx -v
 
 ## uWSGI
 * uwsgi는 파이썬 패키지 안에서 돌아감. 그래서 가상 환경 안에서 설치.
-```
+```bash
 pip install uwsgi
 ```
 
@@ -205,7 +205,7 @@ EC2 -> uWSGI(8000) -> Django(wsgi모듈)
 EC2 -> Nginx(Nginx virtual server) <->(Unix Socket) uWSGI -> Django
 
 ## EC2 -> runserver(8000) -> Django
-```
+```bash
 ./manage.py runserver 0:8000
 ```
 
@@ -215,7 +215,7 @@ EC2 -> Nginx(Nginx virtual server) <->(Unix Socket) uWSGI -> Django
 * `--chdir /srv/runserver-test/mysite` django 프로젝트 루트 경로
 * `--module mysite.wsgi` 은 wsgi 모듈 이름을 적는 곳
 * `runserver-test`의 모듈인 `mysite(config)`의 `wsgi.py` 를 모듈로 한다.
-```
+```bash
 uwsgi \
 --http :8000 \
 > --home /home/ubuntu/.pyenv/versions/runserver-test \ 

@@ -13,15 +13,15 @@ tags:
 `collectstatic`은 `STATIC_ROOT`라고 지정한 폴더에 모든 애플리케이션이 가진 `static folder`의 내용과 `STATICFILES_DIRS`에 지정 한 내용의 모든파일을 복사 한다. 기존에 있던 파일은 덮어 쓴다.
 자동으로 만들어 지는것이 아니라 해당 앱의 폴더의 내용을 그냥 복사 하는것이므로 static 파일의 이름이나 경로가 겹치지 않게 주의 하자.
 `.gitingnore`에 해당 폴더를 넣어 주자. 
-```
+```bash
 /.media
 /.static
 ```
-```
+```bash
 ./manage.py collectstatic
 ```
 그리고 나서 `/static/` 요청을 `Nginx`가 서빙하게 하자
-```
+```python
 # nginx-app.conf
 location /static/ {
     alias /src/ec2/deploy/.static/;
@@ -29,7 +29,7 @@ location /static/ {
 ```
 
 그리고 서버에서 `./manage.py collectstatic`을 실행 시키기 위해 `deploy.sh`를 수정 해보자
-```
+```bash
 # deploy.sh
 # collectstatic을 위한 과정
 cd /srv/ec2-deploy/app

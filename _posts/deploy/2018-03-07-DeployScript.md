@@ -24,7 +24,7 @@ Browser(/static/, /media/) -> EC2 -> Nginx
 이렇게 하는 이유는 Django까지 갔다 오는것 보다 Nginx에서 처리 하는것이 빠르기 때문. (정적 파일 한정)
 
 `config/settings.py`에 추가
-```
+```python
 # ec2-deploy/.static
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(ROOT_DIR, '.static')
@@ -41,7 +41,7 @@ STATICFILES_DIRS = [
 ]
 ```
 `config/urls.py`에 추가
-```
+```python
 urlpatterns += static(
     settings.MEDIA_URL, 
     document_root=settings.MEDIA_ROOT
@@ -50,7 +50,7 @@ urlpatterns += static(
 는 `Debug=True` 일 경우에만 동작 한다.
 그래서 앞단에서 Nginx가 따로 설정을 할 수 있도록 해야 한다.
 `.config`의 `nginx-app.conf`
-```
+```python
 #location /static/ {
 #    alias /srv/ec2-deploy/.static/;
 #}
@@ -65,7 +65,7 @@ location /media/ {
 > `deploy.sh` 파일의 아이콘이 제대로 나오지 않을경우 `BashSupport` 플로그인을 설치 한다.
 > 권한 오류가 날 경우 `deploy.sh` 파일의 권한을 모두사용 가능한 권한으로 바꿔야 한다.`sudo chmod 755 deploy.sh` 를 하자.
 
-```
+```bash
 # .config/deploy.sh
 
 #!/usr/bin/env bash

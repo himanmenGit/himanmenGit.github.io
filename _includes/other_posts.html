@@ -6,7 +6,11 @@
       <li>
         <h3>
           <a href="{{ site.baseurl }}{{ post.url }}">
+            {% if page.url == post.url %}
+            <mark> {{ post.title }}</mark>
+            {% else %}
             {{ post.title }}
+            {% endif %}
             <small>{{ post.date | date_to_string }}</small>
           </a>
         </h3>

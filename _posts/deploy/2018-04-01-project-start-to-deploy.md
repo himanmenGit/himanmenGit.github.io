@@ -11,7 +11,7 @@ tags:
 # 처음부터 하는 배포
 
 **1. 프로젝트 생성 및 설정**
-```
+```bash
 mdkir project
 cd project
 
@@ -39,7 +39,7 @@ pip freeze > .requirements/local.txt
 ---
 **2. 프로젝트 설정 분리**
 config의 settings 와 uwsgi를 환경별로 분리
-```
+```bash
 ├── __init__.py
 ├── settings
 │   ├── __init__.py
@@ -56,7 +56,7 @@ config의 settings 와 uwsgi를 환경별로 분리
 ```
 ==settings.base==
 공통된 속성들을 정의
-```
+```python
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 ROOT_DIR = os.path.dirname(BASE_DIR)
 
@@ -85,7 +85,7 @@ STATICFILES_DIRS = [
 ```
 ==settings.[dev|local|production]==
 각 개발 환경에 맞는 설정
-```
+```python
 from .base import *
 
 secrets = json.loads(open(SECRETS_[LOCAL|DEV|PRODUCTION], 'rt').read())
@@ -126,8 +126,7 @@ STATICFILES_STORAGE = 'config.storage.StaticFilesStorage'
 ```
 
 ==uwsgi.[dev|local|production]==
-```
-uwsgi
+```python
 import os
 
 from django.core.wsgi import get_wsgi_application
@@ -137,7 +136,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.<local|dev|prod
 application = get_wsgi_application()
 ```
 **3. .config폴더 분리**
-```
+```bash
 ├── dev
 │   ├── nginx-app.conf
 │   ├── nginx.conf
@@ -155,7 +154,7 @@ application = get_wsgi_application()
     └── uwsgi.ini
 ```
 ==nginx.conf==
-```
+```bash
 daemon off;
 user root;
 worker_processes 4;
@@ -222,7 +221,7 @@ http {
 }
 ```
 ==nginx-app.conf==
-```
+```bash
 server {
     listen 80;
     # [local|dev|production] 분리 가능
@@ -246,7 +245,7 @@ server {
 ```
 
 ==supercisor.conf==
-```
+```bash
 [program:nginx]
 command : nginx
 
@@ -255,7 +254,7 @@ command = uwsgi -i /srv/project/.config/[local|dev|production]/uwsgi.ini
 ```
 
 ==uwsgi.ini==
-```
+```bash
 [uwsgi]
 chdir = /srv/project/app
 module = config.wsgi.dev
@@ -270,28 +269,28 @@ log-reopen = true
 ---
 **4. .requirements 분리**
 각 환경 별로 필요한 `pip list` 분리
-```
+```bash
 ├── dev.txt
 ├── local.txt
 └── production.txt
 ```
 ---
 **5. .secrets 분리**
-```
+```bash
 ├── base.txt
 ├── dev.txt
 ├── local.txt
 └── production.txt
 ```
 ==base.json==
-```
+```json
 {
   "SECRET_KEY": "<DJANGO SECRET KEY>"
   ...
 }
 ```
 ==local.json==
-```
+```json
 {
   "DATABASES": {
     "default": {
@@ -302,7 +301,7 @@ log-reopen = true
 }
 ```
 ===dev.json==
-```
+```json
 {
   "DATABASES": {
     "default": {
@@ -318,7 +317,7 @@ log-reopen = true
 ```
 
 ==production.json==
-```
+```json
 {
   "DATABASES": {
     "default": {
@@ -334,7 +333,7 @@ log-reopen = true
 ```
 
 **7. .gitignore 추가 작성**
-```
+```bash
 # Custom
 /.media
 /.static
@@ -343,7 +342,7 @@ log-reopen = true
 ...
 ```
 **9. 환경 별 Dockerfile추가**
-```
+```bash
 FROM            python:3.6.4-slim
 MAINTAINER      study.himanmen@gmail.com
 
@@ -379,24 +378,24 @@ RUN             cp -f   /srv/project/.config/${BUILD_MODE}/supervisord.conf  /et
 CMD             pkill nginx; supervisord -n
 ```
 **10. uwsgi 설치후 requirements 추가**
-```
+```bash
 pip install uwsgi
 pip freeze > .requirements/local.txt
 ```
 **11. local에서 DockerRun 실행후 잘 실행되는지 확인**
-```
+```bash
 docker build -t project:local -f Dockerfile.local .
 docker run --rm -it -p 8000:80 project:local
 ```
 **12. sentry 붙이기**
 
-```
+```bash
 pip install raven --upgrade
 pip freeze > .requirements/local.txt
 ```
 ==senty에 가서 프로젝트 만들고 키 받아와서 base.json에 넣기==
 
-```
+```json
 "RAVEN_CONFIG": {
     "dsn": "https://<Sentry DSN>",
     "release": "raven.fetch_git_sha(os.path.abspath(os.pardir)),"
@@ -457,7 +456,7 @@ pip freeze > .requirements/local.txt
   }
 ```
 ==settings.base 에 raven 불러 오기==
-```
+```python
 setattr(sys.modules[__name__], 'raven', importlib.import_module('raven'))
 INSTALLED_APPS = [
     ....
@@ -466,7 +465,7 @@ INSTALLED_APPS = [
 ]
 ```
 ==테스트==
-```
+```bash
 ./manage.py raven test
 ```
 
@@ -486,7 +485,7 @@ INSTALLED_APPS = [
 10. 인스턴스 시작
 
 ==[dev/production].json 파일 수정==
-```
+```json
 {
   "DATABASES": {
     "default": {
@@ -502,19 +501,19 @@ INSTALLED_APPS = [
 ```
 
 *RDS Security Group 인바운드 규칙 추가*
-```
+```bash
 Postgres|TCP|5432|내 IP|...|설명
 ```
 
 **14. S3 관련 설정추가**
-```
+```bash
 pip install django-storages
 pip install boto3
 pip freeze > .requirements/local.txt
 ```
 
 ==config에 storages.py 추가==
-```
+```python
 from storages.backends.s3boto3 import S3Boto3Storage
 
 
@@ -527,7 +526,7 @@ class DefaultFilesStorage(S3Boto3Storage):
     location = 'media'
 ```
 ==config.urls.py 에 MEDIA_ROOT추가==
-```
+```python
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -541,7 +540,7 @@ urlpatterns += static(
 AWS S3 Bucket 만들기
 1. IAM에 S3 유저를 만들고 
 2. ~/.aws/credentials 에 [s3] 프로필을 가진 유저를 만듬
-```
+```python
 import boto3
 session = boto3.Session(profile_name='s3')
 client = session.client('s3')
@@ -553,8 +552,8 @@ client.create_bucket(Bucket='fc-7th-ec2-deploy-himanmen', CreateBucketConfigurat
 
 ==base.json에 s3관련 설정 추가==
 
-```....
-
+```json
+  ....
   "AWS_STORAGE_BUCKET_NAME": "<AWS S3 BUCKET NAME>",
   "AWS_DEFAULT_ACL": "private",
   "AWS_S3_REGION_NAME": "ap-northeast-2",
@@ -570,19 +569,19 @@ client.create_bucket(Bucket='fc-7th-ec2-deploy-himanmen', CreateBucketConfigurat
 5. 사용자 만들고 해당 키 저장
 6. 엑세스 키 ID와 비밀 액세스 키를 가지고 `~/.aws`에 `credentials`에 유저 저장
 ==~/.aws/credentials==
-```
+```python
 [airbnb]
 aws_access_key_id = <AWS ACCESS KEY ID>
 aws_secret_access_key = <AWS SECRET ACCESS KEY>
 ```
 **16. ebcli를 이용해서 eb application을 설정**
-```
+```bash
 pip install awsebcli
 pip freeze > .requirements/local.txt
 ```
 
 프로젝트 폴더 루트로 간후
-```
+```bash
 eb init --profile <profile name>
 # region 설정
 10) ap-northeast-2 : Asia Pacific (Seoul)
@@ -616,11 +615,11 @@ Type a keypair name.
 `Dokcerfile.base`를 만들어 `Dockerfile`에서 오래 걸리는 부분만 따로 떼어 냄.
 `apt-get` 부분과 `pip install -r` 부분
 그리고 `Dockerfile`마지막에 80번 포트를 열어줌
-```
+```bash
 EXPOSE	80
 ```
 **18. eb 환경 만들기***
-```
+```bash
 수정사항들을 커밋을 해주고 (안하면 오류남)
 
 eb create --profile <profile name>
@@ -642,27 +641,27 @@ Select a load balancer type
 
 **18. Docker Hub에 Dockerfile.base 올리기**
 `Dockerfile.base`를 빌드해서 허브에 올려야 한다.
-```
+```bash
 docker build -t <docker images name>:<tag> -f Dockerfile.base .
 ```
 도커 허브에 저장소를 만들자
 `<계정명>:<repository name>`이 저장소 주소가 된다.
 그리고 만들어 놓은 도커 이미지에 저장소로 태그를 붙임.
-```
+```bash
 docker tag <docker images name>:<tag>
 ```
 그리고 도커 허브에 해당 이미지를 `push`
-```
+```bash
 docker push <계정명>/<repository name>:<tag>
 ```
 위에서 만든 태그 네임과 똑같이 사용
 만약 도커허브 접근 권한이 없으면 로그인을 한다
 도커허브 저장소의 tag탭을 보면 base로 올라간것을 볼 수 있다.
-```
+```bash
 docker login
 ```
 그리고 커밋을 하고 배포를 하면
-```
+```bash
 eb delpoy --profile=<profile name>
 eb open
 ```
@@ -671,7 +670,7 @@ Interner server error !
 **19. ignore된 .secrets들을 관리**
 `.secrets`를 스테이징에 올려서 배포를 한후 다시 스테이징에서 지우는 작업을 해야함.
 `deploy.sh`파일을 만들고 내용을 추가
-```
+```bash
 #!/usr/bin/env bash
 # 2. eb-deploy시 .secrets폴더를 stage영역에 추가한 후 작업 완료 후 삭제
 git add -f .secrets && eb deploy --staged --profile=<profile name>; git reset HEAD .secrets
@@ -679,7 +678,7 @@ git add -f .secrets && eb deploy --staged --profile=<profile name>; git reset HE
 
 **20. .ebextensions로 migrate collectstatic 자동화**
 ==00.command_files.config==
-```
+```bash
 files:
   "/opt/elasticbeanstalk/hooks/appdeploy/post/01_migrate.sh":
     mode: "000755"
@@ -718,7 +717,7 @@ files:
       fi
 ```
 ==01_django.config==
-```
+```bash
 container_commands:
   01_migrate:
     command:  "touch /tmp/migrate"
@@ -733,11 +732,11 @@ container_commands:
 ```
 
 **사용자 정의 유저 만들기**
-```
+```bash
 ./manage.py startapp members
 ```
 ==models.py==
-```
+```python
 from django.contrib.auth.models import AbstractUser
 
 
@@ -745,7 +744,7 @@ class User(AbstractUser):
     pass
 ```
 ==settings.base==
-```
+```python
 AUTH_USER_MODEL = 'members.User'
 ...
 INSTALLED_APPS = [
@@ -755,7 +754,7 @@ INSTALLED_APPS = [
 ```
 
 **슈퍼유저 만드는 커맨드 추가**
-```
+```bash
 ├── management
 │   ├── __init__.py
 │   └── commands
@@ -763,7 +762,7 @@ INSTALLED_APPS = [
 │       └── createsu.py
 ```
 ==createsu.py==
-```
+```python
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.management import BaseCommand
@@ -781,28 +780,28 @@ class Command(BaseCommand):
             )
 ```
 ==base.json에 계정 설정==
-```
+```json
   "SUPERUSER_USERNAME": "<USERNAME>",
   "SUPERUSER_PASSWORD": "<PASSWORD>",
   "SUPERUSER_EMAIL": "<EMAIL>",
 ```
 
 ### eb에 만들어진 ec2 접속 방법
-```
+```bash
 eb ssh
 ```
 ### eb안에 있는 ec2안에 있는 docker접속 방법
-```
+```bash
 sudo docker exec -it <dokcer Container ID> /bin/bash
 ```
 
 ### uwsgi로그 확인
-```
+```bash
 cat /tmp/uwsgi.log
 ```
 
 ### 자동으로 로그 보는 법
-```
+```bash
 eb log
 ```
 eb=activity.log에서 많이 난다.

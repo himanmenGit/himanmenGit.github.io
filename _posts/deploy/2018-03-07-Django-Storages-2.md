@@ -15,7 +15,7 @@ tags:
 그렇다면 `django.conf.settings.WSGI_APPLICATION`을 꺼내 온 것과 같은 것이다.
 
 `base.py`에 보면 `WSGI_APPLICATION = 'config.wsgi.application'` 가 있다. 이것을 개발 환경별로 또 빼주면 된다.
-```
+```python
 # local.py
 WSGI_APPLICATION = 'config.wsgi.local.application'
 # dev.py
@@ -28,7 +28,7 @@ WSGI_APPLICATION = 'config.wsgi.production.application'
 `admin`에서 파일을 지워도 `s3`에서는 지워지지 않는다.
 일종의 안정 장치 인거 같은데 `admin`에서 지우면 `s3`에서도 지워지게 만들어 보자
 `delete_post` 시그널을 이용하자
-```
+```python
 # .photo.models.py
 @receiver(post_delete, sender=Photo)
 def model_post_delete(sender, instance, **kwargs):

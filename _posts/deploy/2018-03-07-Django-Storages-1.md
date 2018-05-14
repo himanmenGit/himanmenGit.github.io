@@ -18,7 +18,7 @@ AWS CLI
     Boto3를 기반으로 AWS의 서비스를 쉽게 사용할 수 있도록 도와주는 라이브러리
 
 `Boto3`를 쓰기 위해 `.secrets/base.json`에 AWS KEY를 넣어 보자.
-```
+```bash
 {
 ...
 AWS_ACCESS_KEY_ID: "<AWS_ACCESS_KEY_ID>"
@@ -32,11 +32,11 @@ AWS_DEFAULT_ACL = 'private'
 `boto`와 `boto3`중 `boto3`를 사용하는 것이 좋다.
 
 설치
-```
+```bash
 pip install django-storages
 ```
 설정
-```
+```python
 INSTALLED_APPS = (
     ...
     'storages',
@@ -49,7 +49,7 @@ INSTALLED_APPS = (
 
 이 설정들을 `S3`를 쓰는경우 기본 실행 `backends`를 바꿔 주어야 한다.
 `config/settings.dev 와 production .py`에 추가하자
-```
+```python
 # Media(User-uploaded files)를 위한 스토리지
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 # Static files(collectstatic)를 위한 스토리지
@@ -58,7 +58,7 @@ STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 그리고 필수 적용 사항이 있다.
 버켓에 대해 데이터를 올릴 수 있는 권한을 가진 자격 인증이 필요함
 조금전 `base.json`에 넣어 놓은 키들을 `/config/settings.base.py` 에 넣어보자
-```
+```python
 AWS_ACCESS_KEY_ID = secrets_base['AWS_ACCESS_KEY_ID']
 AWS_SECRET_ACCESS_KEY = secrets_base['AWS_SECRET_ACCESS_KEY']
 AWS_STORAGE_BUCKET_NAME = secrets_base['AWS_STORAGE_BUCKET_NAME']
