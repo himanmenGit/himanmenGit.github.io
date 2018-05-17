@@ -1,14 +1,21 @@
-def sum_digit(number):
-    if number < 10:
-        return number;
-    return (number % 10) + sum_digit(number // 10)
-
-# 아래는 테스트로 출력해 보기 위한 코드입니다.
-print("결과 : {}".format(sum_digit(123)));
-
-def sum_digit(number):
-    return sum(map(int, str(number)))
+def strToInt(s):
+    return int(s)
 
 
 # 아래는 테스트로 출력해 보기 위한 코드입니다.
-print("결과 : {}".format(sum_digit(123)));
+print(strToInt("1234"));
+
+def strToInt(str):
+    result = 0
+
+    for idx, number in enumerate(str[::-1]):
+        if number == '-':
+            result *= -1
+        else:
+            result += int(number) * (10 ** idx)
+
+    return result
+
+
+# 아래는 테스트로 출력해 보기 위한 코드입니다.
+print(strToInt("-1234"));
