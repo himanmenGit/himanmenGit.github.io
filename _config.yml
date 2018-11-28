@@ -38,3 +38,5 @@ github:
 
 disqus:
   shortname: himanmenblog
+
+excerpt_separator: ""

@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Django 템플릿에서 {% static %}을 커스텀 하여 정적파일 강제 새로고침 하기"
+title: "Django 템플릿에서 정적파일 강제 새로고침 하기"
 categories:
   - Django
 tags:
@@ -9,6 +9,7 @@ tags:
   - Tip
 ---
 
+{% raw %}
 # 작성 이유
 본 포스팅은 작성자가 프로젝트를 진행하다 `css/js`파일이 수정후 배포하였을때 자동 새로고침이 되지 않아 만들어 본 기능이다.
 
@@ -33,7 +34,6 @@ tags:
 
 해당 포스팅에서는 `{% static %}`을 바꾸지 않고 위의 코드처럼 경로를 넣더라고 뒤에 쿼리스트링을 붙이는 방법을 제시한다.
 
-{% raw  %}
 ```python
 # project/app_name/templatetags/static.py
 from django import template
@@ -58,13 +58,11 @@ def do_static(parser, token):
 
 ```
 이렇게 하면 `{% load static %}`과 `{% static 'path' %}`로 만들어 놓은 템플릿 코드를 수정 하지 않고 바로 적용이 가능하다.
-{% endraw  %}
 
-## `django-sass-processor`를 설치하여 `{% sass_src 'path' %}`를 사용할 경우
+***`django-sass-processor`를 설치하여 `{% sass_src 'path' %}`를 사용할 경우***
 
 위와 동일하게 추가적인 템플릿 코드 수정없이 진행하기위해 사용하였다.
  
- {% raw  %}
 ```python
 # project/app_name/templatetags/sass_tags.py
 from django import template
@@ -86,6 +84,6 @@ class CustomSassSrcNode(SassSrcNode):
 @register.tag(name='sass_src')
 def render_sass_src(parser, token):
     return CustomSassSrcNode.handle_token(parser, token)
-
 ```
-{% endraw  %}
+
+{% endraw %}
