@@ -14,8 +14,8 @@ baseurl:          # the optional subpath of your site, e.g. "/blog"
                   # sidebar_blog_link below.
 
 author:
-  name:           '박수민'
-  url:            https://www.facebook.com/himanmen
+  name:           '유주아빠'
+  url:            https://himanmengit.github.io/
 
 paginate:         20
 # paginate_path:    '/page:num'
