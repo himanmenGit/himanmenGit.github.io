@@ -266,5 +266,7 @@ boto3==1.6.18
 더 좋은 방법을 많고 여기서 본 방법은 매우 심플한 기본 예제 이다.
 
 
+# 소스코드
+<https://github.com/himanmenGit/aws-lambda-s3-pillow>
 # 참고 사이트
 <https://learn-serverless.org/post/deploying-pillow-aws-lambda/>
