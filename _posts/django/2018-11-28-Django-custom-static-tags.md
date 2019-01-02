@@ -18,15 +18,15 @@ tags:
 `static` 템플릿 태그에 다른 기능을 사용하지 않고 오직 `{% static 'path' %}`만 사용 할 경우에 사용 해야 문제가 생기지 않는다.
 
 # 설명
-장고 템플릿에서 정적 파일을 로드 할 경우 `{% load static %}`을 하여 `{% static 'path' %}` 의 형태로 사용한다. 
+장고 템플릿에서 정적 파일을 로드 할 경우 `{% load static %}`을 하여 `{% static 'path' %}` 의 형태로 사용한다.
 ```javascript
 <script type="text/javascript" src="{% static 'js/file.js' %}"></script>
 ```
 그런데 여기서 문제는 배포시 마다 같은 파일 이름을 가진 `css`나 `js`파일이 브라우저 에서 캐싱되어
- 
+
 사용자가 강제적으로 브라우저의 캐시를 지워주지 않으면 배포후에 해당 파일들이 새로 고침이 되지 않는 현상이 발생한다.
 
-이런경우 하나의 팁이 파일의 경로 뒤에 `?build=20181128`과 같은 쿼리 스트링을 적어 주면 
+이런경우 하나의 팁이 파일의 경로 뒤에 `?build=20181128`과 같은 쿼리 스트링을 적어 주면
 
 브라우저는 쿼리 스트링을 포함한 URL을 기준으로 캐시가 이루어지기 때문에 다른 파일로 인식이 된다.
 
@@ -62,7 +62,7 @@ def do_static(parser, token):
 ***`django-sass-processor`를 설치하여 `{% sass_src 'path' %}`를 사용할 경우***
 
 위와 동일하게 추가적인 템플릿 코드 수정없이 진행하기위해 사용하였다.
- 
+
 ```python
 # project/app_name/templatetags/sass_tags.py
 from django import template

@@ -2,15 +2,15 @@
 layout: post
 title: "자기자신과 슈퍼유저만 접근 가능한 뷰를 위한 Mixin"
 categories:
-  - TIL
+  - Django
 tags:
-  - TIL
+  - Django
   - Django
   - Mixin
 ---
 
 
-어떤 뷰를 접근할 경우 로그인 하지 않았을 경우나 
+어떤 뷰를 접근할 경우 로그인 하지 않았을 경우나
 로그인 했지만 슈퍼유저나 자기자신이 아닐 경우에 접근을 제한하는 Mixin을 만들어 봄
 
 더 좋은 방법이 있을 것 같은데 떠오르지 않음..

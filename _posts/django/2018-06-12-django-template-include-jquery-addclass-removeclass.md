@@ -2,9 +2,9 @@
 layout: post
 title: "장고 템플릿 include에서 jquery를 이용한 클래스 설정"
 categories:
-  - TIL
+  - Django
 tags:
-  - TIL
+  - Django
   - Jquery
 ---
 
@@ -28,11 +28,11 @@ tags:
           $('.base a').each(function () {
             var id = $(this).attr('id')
             if(id == '{{ kind }}'){
-                // 해당 페이지를 활성화 시키고 
+                // 해당 페이지를 활성화 시키고
                 // href 속성을 제거함
                 $(this).addClass('active').removeAttr("href");
             }else{
-                // 해당 페이지를 제외한 페이지들은 
+                // 해당 페이지를 제외한 페이지들은
                 // 비활성 함
                 $(this).removeClass('active')
             }

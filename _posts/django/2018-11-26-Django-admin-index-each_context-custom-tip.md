@@ -15,7 +15,7 @@ Django 관리자 페이지의 `index`를 커스텀 하고 싶은데 `AdminSite` 
 그래서 `AdminSite`의 메소드를 바꿔 버리는 조금 위험하지만 편한 트릭을 알게되어 적용 해보았다.
 
 # 설명
-설명이 따로 없다. 
+설명이 따로 없다.
 
 기본 `AdminSite`의 `index` 함수와 `each_context`를 다른 함수로 교체(?) 바꾸어 버리는 방법을 사용
 
@@ -47,7 +47,7 @@ def index(site_object, request, extra_context=None):
 def each_context(site_object, request):
     # context데이터를 가공하여 보냄
     context = AdminSite.each_context(site_object, request)
-    
+
     # admin인 경우에만 해당 인덱스 페이지를 가져옴
     if request.path == '/admin/':
         setting_admin_index(context)
