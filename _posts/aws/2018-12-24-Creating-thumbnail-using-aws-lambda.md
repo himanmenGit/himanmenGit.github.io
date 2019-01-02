@@ -85,6 +85,7 @@ boto3==1.6.18
 3. `thumbnail.py` 코드 작성
     ```python
     # thumbnail.py
+    import urllib.parse
     import boto3
     import uuid
     from PIL import Image
@@ -113,8 +114,10 @@ boto3==1.6.18
                 download_path = '/tmp/{}{}'.format(uuid.uuid4(), key)
                 upload_path = '/tmp/resized-{}'.format(key)
 
+                # 한글 파일명을 위한 디코딩
+                decode_key = urllib.parse.unquote(key)
                 # himanmen-aws-lambda-thumbnail에서 파일을 받아
-                s3_client.download_file(bucket, key, download_path)
+                s3_client.download_file(bucket, decode_key, download_path)
 
                 # 리사이징 후
                 resize_image(download_path, upload_path)
@@ -257,7 +260,6 @@ boto3==1.6.18
     * 그리고 `aws-lambda-thumbnail`에 이미지를 한장 업로드 하고 기다림.
     * 조금후 `aws-lambda-thumbnail-resized`에 파일이 생성!
     * 혹시 에러가 날경우 CloudWatch로 가서 에러내용을 확인 해보자
-    > 한글 파일은 `s3`에서 파일을 찾지 못해서 계속 에러가 난다..
 
 
 이렇게 `s3`에 업로드 되는 이미지들을 `lambda`를 통해 `resizing` 하는 방법을 알아 보았다.
