@@ -35,7 +35,7 @@ boto3==1.6.18
 
 # 시작
 ### step0 역할(role) 만들기
-1. IAM -> 역할 -> 역할 만들기 
+1. IAM -> 역할 -> 역할 만들기
 2. AWS 서비스(Lambda) -> 정책검색(AWSLambdaFullAccess, AmazonS3FullAccess) 후 체크박스 체크   
 -> 태그 추가(패스) -> 검토 역할 이름 ex)aws-lambda-thumbnail-role -> 역할 만들기
     * 리스트
@@ -66,7 +66,7 @@ boto3==1.6.18
 
     이제 람다 함수는 제대로 만들어 진 것을 확인 함.
 
-### Step2 썸네일 만들기 코드 작성 
+### Step2 썸네일 만들기 코드 작성
 1. 적절한곳에 폴더를 만들고 virtualenv 적용
     ```shell
     mkdir aws_lambda_pil
@@ -173,7 +173,7 @@ boto3==1.6.18
     * 코드를 올릴 버킷에 `pil.zip`를 업로드 한다.
     * 그리고 해당 객체의 url을 복사한다.
     ![](/assets/aws/thumbnail/aws_lambda_upload_code.png)
-    
+
 3. `lambda`에 코드 적용
     * `lambda`로 가서 함수 코드 부분의 코드 입력 유형을 `Amazon S3에서 파일 업로드`로 변경
     * 아래 `Amazon S3 Url`에 위에서 복사한 파일의 `URL`을 넣음.
@@ -229,7 +229,7 @@ boto3==1.6.18
     기존에 `requirements.txt`에 있던 `Pillow`를 빼고 `env`에 있는 `Pillow`를 압축하여 다시 실행 해
 보자    
     그럴려면 `Makefile`을 조금 수정 해야 한다.
-    
+
     ```shell
     clean:
       rm -rf pil pil.zip
@@ -251,7 +251,7 @@ boto3==1.6.18
       rm -rf lib
     ```
 
-3. 다시 업로드 
+3. 다시 업로드
     * 압축한 파일을 다시 코드가 있는 버킷에 업로드 하자.
     * 업로드후 `lambda`의 s3파일 주소를 갱신 (어차피 똑같지만 새로고침)후 저장
     * 그리고 `aws-lambda-thumbnail`에 이미지를 한장 업로드 하고 기다림.
