@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "lambda에서 국내 코인 거래소 공지사항 크롤링후 텔레그램 봇으로 전송하기"
+title: "lambda에서 국내 코인 거래소 공지사항 크롤링후 텔레그램 봇으로 전송하기1 - crawler"
 categories:
   - Aws
 tags:
@@ -38,11 +38,17 @@ tags:
 [Docker-Desktop](https://www.docker.com/products/docker-desktop) 맥과 윈도에선 이것들을 한번에   
 > 도커는 최대한 `lambda` 환경과 비슷한 환경에서 작업 및 테스트를 해보기 위해 필요함.
 
-**lambda 환경**   
+**local 환경**
 ```
 python==3.6
 awscli==1.16.70
+```
+
+**lambda 환경**   
+```
+python==3.6
 boto3==1.6.18
+botocore==1.9.18
 selenium==3.141.0
 beautifulsoup4==4.6.3
 chromedriver-installer==0.0.6
@@ -446,7 +452,6 @@ make make-crawler-s3-upload BUCKET_NAME=${BUCKET_NAME}
 # 끝!
 
 이 아니라 다음편에 이 크롤러를 작동 시키는 `trigger`를 `lambda`로 만들어야 비로소 완성 된다.
-
 
 
 ## 소스코드
