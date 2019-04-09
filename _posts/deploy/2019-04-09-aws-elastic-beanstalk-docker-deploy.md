@@ -148,6 +148,7 @@ Hello World
 
 > eb local run 을 하면 `ERROR: UnicodeDecodeError - 'ascii' codec can't decode byte 0xec in position 118: ordinal not in range(128)` 이라는 에러가 난다 이유를 모르겠다..
 
+> 찾았다 Dockerfile에 한글 주석이 있으니 안된다. eb local run을 할 경우엔 주석을 빼버리자.
 
 ### elb의 health-check가 자꾸 안된다면 이렇게 해보자..
 ```nginx
