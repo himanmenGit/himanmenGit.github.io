@@ -19,7 +19,7 @@ tags:
 [ec2-on-docker-compose](https://github.com/himanmenGit/docker-practice)
 
 ### ec2 설정및 Docker CE 설치
-[ec2-on-docker](https://himanmengit.github.io/deploy/2019/04/02/ec2-redis-server-ngin-supervisor%EC%84%A4%EC%B9%98.html)의 설치 과정을 그대로
+[ec2-on-docker](https://himanmengit.github.io/deploy/2019/04/02/ec2-on-docker(django-nginx-uwsgi-supervisor).html)의 설치 과정을 그대로
 
 ### docker-compose 설치
 
