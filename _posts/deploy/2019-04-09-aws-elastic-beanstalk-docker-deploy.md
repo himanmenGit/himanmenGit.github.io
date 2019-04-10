@@ -179,6 +179,44 @@ server {
 ```
 elb의 대상 그룹에 상태 검사 url 부분을 /health-check로 바꾸어 주자
 
+
+### Dockerrun.aws.json 사용 추가
+
+Dockerrun.aws.json을 사용하려면 Dockerfile을 빌드 하여 Dockerhub의 Repository에 이미지를 올려서 사용해야 한다.
+Dockerfile을 빌드 하여 [Dockerhub](https://cloud.docker.com/)에 푸시하자
+
+```shell
+$ docker logi
+$ docker build -t <docker hub user anem>/<docker-image-name>:<tag> .
+$ docker build -t himanmen/eb-docker/latest .
+$ docker push himanmen/eb-docker:latest 
+```
+
+푸시 한 이미지를 eb에 연결
+
+```json
+{
+  "AWSEBDockerrunVersion": "1",
+  "Image": {
+    "Name": "himanmen/eb-docker",
+    "Update": "true"
+  },
+  "Ports": [
+    {
+      "ContainerPort": "80"
+    }
+  ]
+}
+```
+
+`eb init`을 하여 위 와같이 셋팅 함.
+```json
+$ eb local run --port 8080
+$ eb local open
+```
+
+해보고 잘되면 `eb create` 진행 
+
 ## 참고
 출처 : [스승님 블로그](https://lhy.kr/eb-docker)
 출처 : [KH BYUN님 블로그](https://novemberde.github.io/docker/2017/07/03/Elastic_Beanstalk.html)
