@@ -7,6 +7,7 @@ tags:
   - UiPath
 ---
 
+***이 문서는 지속적으로 업데이트 될 예정 입니다.***
 
 ### Datatable
 
@@ -62,18 +63,33 @@ GroupSum<String[]> = dataTable.AsEnumerable.
                                     )
                             ).ToArry
                             
-for each GroupSum in item
+forEach GroupSum in item
     Log(item)
 
 > 93 : m Count - 3
 > 62 : f Count - 2
 ```
-    
+
+* 지정한 Column의 Row들을 Array로 가져오기
+
+```c#
+array_row<String[]> = dataTable.AsEnumerable.Select(Function(row) row("Sex").ToString).ToArray
+
+forEach item in array_row
+    Log(item)
+
+> m
+> f
+> m
+> f
+> m
+```
+
 ### Collection
 
 * Sampel Array
 
-```c#
+```c#spq 
 names = {"Marius", "Daniel" "Arial", "Asta"}
 ```
 
@@ -82,7 +98,7 @@ names = {"Marius", "Daniel" "Arial", "Asta"}
 ```c#
 filteredNames<String[]> = (From name In names.AsEnumerable Where name.StartsWith("A") Select name).ToArray
 
-for each name in filteredNames
+forEach name in filteredNames
     Log(name)
     
 > Arial, Asta
